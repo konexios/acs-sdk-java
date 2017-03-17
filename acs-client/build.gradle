@@ -1,0 +1,22 @@
+version = '2.0'
+
+jar {
+    manifest {
+        attributes(
+            "Created-By": "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})",
+            "Implementation-Title": "Arrow Cloud Services (ACS) - Client",
+            "Implementation-Version": version,
+            "Implementation-Vendor": "Arrow Electronics, Inc.")                        
+    }
+}
+
+def jarToCopy = copySpec {
+    from "build/libs/${jar.archiveName}"
+}
+
+task copyJar(dependsOn: jar) << {
+    copy {
+        with jarToCopy
+        into "../../lib"
+    }
+}

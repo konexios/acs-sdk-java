@@ -1,0 +1,39 @@
+version = '2.0'
+
+jar {
+    manifest {
+        attributes(
+            "Created-By": "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})",
+            "Implementation-Title": "Arrow Cloud Services (ACS) - Core",
+            "Implementation-Version": version,
+            "Implementation-Vendor": "Arrow Electronics, Inc.")                        
+    }
+}
+
+dependencies {
+    compile("commons-io:commons-io:2.5")
+    compile("commons-codec:commons-codec:1.10")
+
+    compile("org.apache.commons:commons-lang3:3.5")
+    compile("org.apache.httpcomponents:httpclient:4.5.2")
+    
+    compile("org.apache.logging.log4j:log4j-api:${log4jVersion}")
+    compile("org.apache.logging.log4j:log4j-core:${log4jVersion}")
+    compile("org.apache.logging.log4j:log4j-slf4j-impl:${log4jVersion}")           
+
+    compile("com.fasterxml.jackson.core:jackson-core:${jacksonVersion}")
+    compile("com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}")
+    compile("com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}")
+    compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}")                  
+}
+
+def jarToCopy = copySpec {
+    from "build/libs/${jar.archiveName}"
+}
+
+task copyJar(dependsOn: jar) << {
+    copy {
+        with jarToCopy
+        into "../../lib"
+    }
+}
