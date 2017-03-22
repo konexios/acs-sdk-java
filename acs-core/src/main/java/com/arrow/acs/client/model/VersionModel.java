@@ -15,6 +15,7 @@ public class VersionModel extends DefinitionModelAbstract<VersionModel> {
 
 	private Integer major;
 	private Integer minor;
+	private Integer build;
 	private Integer compatibleMajor;
 	private Integer compatibleMinor;
 
@@ -30,6 +31,11 @@ public class VersionModel extends DefinitionModelAbstract<VersionModel> {
 
 	public VersionModel withMinor(Integer minor) {
 		setMinor(minor);
+		return this;
+	}
+
+	public VersionModel withBuild(Integer build) {
+		setBuild(build);
 		return this;
 	}
 
@@ -57,6 +63,14 @@ public class VersionModel extends DefinitionModelAbstract<VersionModel> {
 
 	public void setMinor(Integer minor) {
 		this.minor = minor;
+	}
+
+	public Integer getBuild() {
+		return build;
+	}
+
+	public void setBuild(Integer build) {
+		this.build = build;
 	}
 
 	public Integer getCompatibleMajor() {

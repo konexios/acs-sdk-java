@@ -20,16 +20,34 @@ public abstract class VersionAbstract {
 	};
 
 	protected static VersionModel readManifest(Class<?> clazz) {
+		VersionModel model = new VersionModel().withMajor(0).withMinor(0).withBuild(0).withName("Unknown")
+		        .withDescription("Unknown");
 		try {
 			Manifest manifest = ManifestUtils.readManifest(clazz);
 			String title = manifest.getMainAttributes().getValue(Attributes.Name.IMPLEMENTATION_TITLE);
+			model.withName(title).withDescription(title);
 			String version = manifest.getMainAttributes().getValue(Attributes.Name.IMPLEMENTATION_VERSION);
-			String[] tokens = version.split("\\.", -1);
-			return (VersionModel) new VersionModel().withMajor(Integer.parseInt(tokens[0]))
-			        .withMinor(Integer.parseInt(tokens[1])).withName(title).withDescription(title);
+			String[] tokens = version.split("\\.");
+			if (tokens.length > 0) {
+				try {
+					model.withMajor(Integer.parseInt(tokens[0]));
+				} catch (Exception e) {
+				}
+				if (tokens.length > 1) {
+					try {
+						model.withMinor(Integer.parseInt(tokens[1]));
+					} catch (Exception e) {
+					}
+					if (tokens.length > 2) {
+						try {
+							model.withBuild(Integer.parseInt(tokens[2]));
+						} catch (Exception e) {
+						}
+					}
+				}
+			}
 		} catch (Throwable t) {
-			return (VersionModel) new VersionModel().withMajor(0).withMinor(0).withName("unknown")
-			        .withDescription("unknown");
 		}
+		return model;
 	}
 }
