@@ -1,12 +1,14 @@
 package com.arrow.acs.client.model;
 
 import java.io.Serializable;
+import java.time.Instant;
 
 public class ErrorModel implements Serializable {
-	private static final long serialVersionUID = 5473020814782111757L;
+	private static final long serialVersionUID = 6041436134885570954L;
 
 	private String code;
 	private String message;
+	private String timestamp;
 
 	public ErrorModel withCode(String code) {
 		setCode(code);
@@ -15,6 +17,11 @@ public class ErrorModel implements Serializable {
 
 	public ErrorModel withMessage(String message) {
 		setMessage(message);
+		return this;
+	}
+
+	public ErrorModel withTimestamp(Instant timestamp) {
+		setTimestamp(timestamp.toString());
 		return this;
 	}
 
@@ -34,12 +41,21 @@ public class ErrorModel implements Serializable {
 		this.message = message;
 	}
 
+	public String getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(String timestamp) {
+		this.timestamp = timestamp;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((code == null) ? 0 : code.hashCode());
 		result = prime * result + ((message == null) ? 0 : message.hashCode());
+		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
 		return result;
 	}
 
@@ -61,6 +77,11 @@ public class ErrorModel implements Serializable {
 			if (other.message != null)
 				return false;
 		} else if (!message.equals(other.message))
+			return false;
+		if (timestamp == null) {
+			if (other.timestamp != null)
+				return false;
+		} else if (!timestamp.equals(other.timestamp))
 			return false;
 		return true;
 	}
