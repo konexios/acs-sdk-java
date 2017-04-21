@@ -15,13 +15,16 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
+import java.util.regex.Pattern;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
@@ -41,13 +44,12 @@ import com.arrow.acs.client.model.ModelAbstract;
 import com.arrow.acs.client.model.PagingResultModel;
 import com.arrow.acs.client.model.StatusModel;
 import com.arrow.acs.client.search.SearchCriteria;
-import com.arrow.acs.client.search.SearchCriteria.Pair;
-import com.fasterxml.jackson.core.type.TypeReference;
 
 public abstract class ApiAbstract extends Loggable {
 
 	private static final String SIGNATURE_MSG = "signature: %s";
 	private static final String MIME_APPLICATION_JSON = "application/json";
+	private static final Pattern EXTRA_SLASHES = Pattern.compile("/{2,}");
 
 	private ApiConfig apiConfig;
 
@@ -60,23 +62,23 @@ public abstract class ApiAbstract extends Loggable {
 	}
 
 	public URI buildUri(String path) {
+		return buildUri(path, null);
+	}
+
+	public URI buildUri(String path, SearchCriteria criteria) {
 		Validate.notNull(apiConfig, "apiConfig is not set");
+		String baseUrl = apiConfig.getBaseUrl();
 		try {
-			URIBuilder uriBuilder;
-			if (!StringUtils.isBlank(apiConfig.getBaseUrl())) {
-				uriBuilder = new URIBuilder(apiConfig.getBaseUrl());
-			} else {
-				uriBuilder = new URIBuilder();
-			}
+			URIBuilder uriBuilder = new URIBuilder(StringUtils.isBlank(baseUrl) ? "" : baseUrl);
 			if (!StringUtils.isEmpty(path)) {
-				StringBuilder pathBuilder = new StringBuilder()
-				        .append(uriBuilder.getPath() != null ? uriBuilder.getPath() : "").append("/").append(path);
-				uriBuilder.setPath(pathBuilder.toString().replaceAll("/{2,}", "/"));
+				uriBuilder.setPath(EXTRA_SLASHES.matcher(uriBuilder.getPath() + '/' + path).replaceAll("/"));
+			}
+			if (criteria != null) {
+				uriBuilder.setParameters(criteria.getAllCriteria());
 			}
 			return uriBuilder.build();
 		} catch (URISyntaxException e) {
-			throw new AcsClientException("Invalid base: " + apiConfig.getBaseUrl() + ", path: " + path,
-			        new AcsErrorResponse());
+			throw new AcsClientException("Invalid base: " + baseUrl + ", path: " + path, new AcsErrorResponse());
 		}
 	}
 
@@ -108,8 +110,8 @@ public abstract class ApiAbstract extends Loggable {
 		String method = "execute";
 		Instant timestamp = Instant.now();
 		ApiRequestSigner signer = getSigner(request, timestamp);
-		for (Pair entry : criteria.getAllCriteria()) {
-			signer.parameter(entry.getName(), entry.getValue());
+		for (NameValuePair pair : criteria.getAllCriteria()) {
+			signer.parameter(pair.getName(), pair.getValue());
 		}
 		String signature = signer.signV1();
 		logDebug(method, SIGNATURE_MSG, signature);

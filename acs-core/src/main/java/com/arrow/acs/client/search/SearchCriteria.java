@@ -17,7 +17,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class SearchCriteria {
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
+public abstract class SearchCriteria {
 	protected Map<String, String> simpleCriteria = new HashMap<>();
 	protected Map<String, String[]> arrayCriteria = new HashMap<>();
 
@@ -29,18 +32,19 @@ public class SearchCriteria {
 		return Collections.unmodifiableMap(arrayCriteria);
 	}
 
-	public List<Pair> getAllCriteria() {
-		List<Pair> pairs = new ArrayList<>();
+	public List<NameValuePair> getAllCriteria() {
+		List<NameValuePair> pairs = new ArrayList<>();
 		for (Entry<String, String> entry : simpleCriteria.entrySet()) {
 			String value = entry.getValue();
 			if (!value.isEmpty()) {
-				pairs.add(new Pair(entry.getKey(), value));
+				pairs.add(new BasicNameValuePair(entry.getKey(), value));
 			}
 		}
 		for (Entry<String, String[]> entry : arrayCriteria.entrySet()) {
+			String name = entry.getKey();
 			for (String value : entry.getValue()) {
 				if (!value.isEmpty()) {
-					pairs.add(new Pair(entry.getKey(), value));
+					pairs.add(new BasicNameValuePair(name, value));
 				}
 			}
 		}
@@ -48,28 +52,10 @@ public class SearchCriteria {
 	}
 
 	public String toString() {
-		String result = "?";
-		for (Pair entry : getAllCriteria()) {
-			result += entry.getName() + "=" + entry.getValue() + "&";
+		StringBuilder result = new StringBuilder("?");
+		for (NameValuePair entry : getAllCriteria()) {
+			result.append(entry.getName()).append('=').append(entry.getValue()).append('&');
 		}
 		return result.substring(0, result.length() - 1);
-	}
-
-	public static class Pair {
-		String name;
-		String value;
-
-		public Pair(String name, String value) {
-			this.name = name;
-			this.value = value;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public String getValue() {
-			return value;
-		}
 	}
 }
