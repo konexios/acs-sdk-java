@@ -76,9 +76,13 @@ public class GatewayPayloadSigner extends Loggable {
 		logDebug(method, "stringToSign: %s", stringToSign);
 
 		String signingKey = HmacUtils.hmacSha256Hex(ApiHeaders.X_ARROW_VERSION_1,
-				HmacUtils.hmacSha256Hex(apiKey, secretKey));
+		        HmacUtils.hmacSha256Hex(apiKey, secretKey));
+		logDebug(method, "signingKey: %s", signingKey);
 
-		return HmacUtils.hmacSha256Hex(signingKey, stringToSign.toString());
+		String signature = HmacUtils.hmacSha256Hex(signingKey, stringToSign.toString());
+		logDebug(method, "signature: %s", signature);
+
+		return signature;
 	}
 
 	private String buildCanonicalRequest() {
