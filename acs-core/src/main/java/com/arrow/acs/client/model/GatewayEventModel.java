@@ -21,6 +21,8 @@ public class GatewayEventModel implements Serializable {
 	private String name;
 	private boolean encrypted = false;
 	private Map<String, String> parameters = new LinkedHashMap<>();
+	private String signature;
+	private String signatureVersion;
 
 	public GatewayEventModel withHid(String hid) {
 		setHid(hid);
@@ -39,6 +41,16 @@ public class GatewayEventModel implements Serializable {
 
 	public GatewayEventModel withParameters(Map<String, String> parameters) {
 		setParameters(parameters);
+		return this;
+	}
+
+	public GatewayEventModel withSignature(String signature) {
+		setSignature(signature);
+		return this;
+	}
+
+	public GatewayEventModel withSignatureVersion(String signatureVersion) {
+		setSignatureVersion(signatureVersion);
 		return this;
 	}
 
@@ -74,6 +86,22 @@ public class GatewayEventModel implements Serializable {
 		this.parameters = parameters;
 	}
 
+	public String getSignature() {
+		return signature;
+	}
+
+	public void setSignature(String signature) {
+		this.signature = signature;
+	}
+
+	public String getSignatureVersion() {
+		return signatureVersion;
+	}
+
+	public void setSignatureVersion(String signatureVersion) {
+		this.signatureVersion = signatureVersion;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -82,6 +110,8 @@ public class GatewayEventModel implements Serializable {
 		result = prime * result + ((hid == null) ? 0 : hid.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((parameters == null) ? 0 : parameters.hashCode());
+		result = prime * result + ((signature == null) ? 0 : signature.hashCode());
+		result = prime * result + ((signatureVersion == null) ? 0 : signatureVersion.hashCode());
 		return result;
 	}
 
@@ -110,6 +140,16 @@ public class GatewayEventModel implements Serializable {
 			if (other.parameters != null)
 				return false;
 		} else if (!parameters.equals(other.parameters))
+			return false;
+		if (signature == null) {
+			if (other.signature != null)
+				return false;
+		} else if (!signature.equals(other.signature)) 
+			return false;
+		if (signatureVersion == null) {
+			if (other.signatureVersion != null)
+				return false;
+		} else if (!signatureVersion.equals(other.signatureVersion)) 
 			return false;
 		return true;
 	}
