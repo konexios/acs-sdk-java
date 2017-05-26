@@ -19,6 +19,7 @@ import org.apache.commons.codec.digest.HmacUtils;
 import org.apache.commons.lang3.Validate;
 
 public class GatewayPayloadSigner extends Loggable {
+	public static final String PAYLOAD_SIGNATURE_VERSION_1 = "1";
 	private String secretKey;
 	private String hid;
 	private String name;
@@ -72,11 +73,11 @@ public class GatewayPayloadSigner extends Loggable {
 		StringBuilder stringToSign = new StringBuilder();
 		stringToSign.append(hash(buildCanonicalRequest())).append('\n');
 		stringToSign.append(apiKey).append('\n');
-		stringToSign.append(ApiHeaders.X_ARROW_VERSION_1);
+		stringToSign.append(PAYLOAD_SIGNATURE_VERSION_1);
 		logDebug(method, "stringToSign: %s", stringToSign);
 
-		String signingKey = HmacUtils.hmacSha256Hex(ApiHeaders.X_ARROW_VERSION_1,
-		        HmacUtils.hmacSha256Hex(apiKey, secretKey));
+		String signingKey = HmacUtils.hmacSha256Hex(PAYLOAD_SIGNATURE_VERSION_1,
+				HmacUtils.hmacSha256Hex(apiKey, secretKey));
 		logDebug(method, "signingKey: %s", signingKey);
 
 		String signature = HmacUtils.hmacSha256Hex(signingKey, stringToSign.toString());
