@@ -10,6 +10,11 @@
  *******************************************************************************/
 package com.arrow.acs.client.model;
 
-public enum CompanyStatus {
-	Active, InActive, Locked, Pending
+public class RegionModel extends DefinitionModelAbstract<RegionModel> {
+	private static final long serialVersionUID = 6985820277281732687L;
+
+	@Override
+	protected RegionModel self() {
+		return this;
+	}
 }

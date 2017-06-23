@@ -28,6 +28,36 @@ public class ApplicationModel extends DefinitionModelAbstract<ApplicationModel> 
 	@JsonIgnore
 	private SubscriptionModel refSubscription;
 
+	public ApplicationModel withCompanyHid(String companyHid) {
+		setCompanyHid(companyHid);
+		return this;
+	}
+
+	public ApplicationModel withProductHid(String productHid) {
+		setProductHid(productHid);
+		return this;
+	}
+
+	public ApplicationModel withSubscriptionHid(String subscriptionHid) {
+		setSubscriptionHid(subscriptionHid);
+		return this;
+	}
+
+	public ApplicationModel withApiSigningRequired(YesNoInherit apiSigningRequired) {
+		setApiSigningRequired(apiSigningRequired);
+		return this;
+	}
+
+	public ApplicationModel withDefaultSamlEntityId(String defaultSamlEntityId) {
+		setDefaultSamlEntityId(defaultSamlEntityId);
+		return this;
+	}
+
+	public ApplicationModel withCode(String code) {
+		setCode(code);
+		return this;
+	}
+
 	@Override
 	protected ApplicationModel self() {
 		return this;
