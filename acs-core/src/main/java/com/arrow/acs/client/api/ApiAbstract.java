@@ -11,6 +11,7 @@
 package com.arrow.acs.client.api;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
@@ -117,6 +118,25 @@ public abstract class ApiAbstract extends Loggable {
 		logDebug(method, SIGNATURE_MSG, signature);
 		addHeaders(request, timestamp, signature);
 		return JsonUtils.fromJson(execute(request), typeRef);
+	}
+
+	public long execute(HttpRequestBase request, OutputStream outputStream) throws IOException {
+		Validate.notNull(request, "request is null");
+		Validate.notNull(apiConfig, "apiConfig is not set");
+		String method = "execute";
+		logInfo(method, "url: %s", request.getURI());
+		try (CloseableHttpClient httpClient = ConnectionManager.getInstance().getConnection()) {
+			HttpResponse response = httpClient.execute(sign(request));
+			int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode != HttpStatus.SC_OK) {
+				String content = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+				String message = String.format("error response: %d - %s, error: %s", statusCode,
+				        response.getStatusLine().getReasonPhrase(), content);
+				throw new AcsClientException(message,
+				        new AcsErrorResponse().withStatus(statusCode).withMessage(message));
+			}
+			return IOUtils.copyLarge(response.getEntity().getContent(), outputStream);
+		}
 	}
 
 	private String execute(HttpRequestBase request) throws IOException {
