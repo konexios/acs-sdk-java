@@ -10,11 +10,20 @@
  *******************************************************************************/
 package com.arrow.acs.client.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class ZoneModel extends DefinitionModelAbstract<ZoneModel> {
-	private static final long serialVersionUID = -180946967438207823L;
+	private static final long serialVersionUID = -8201172265880650584L;
 
 	private String systemName;
 	private String regionHid;
+	@JsonIgnore
+	private RegionModel refRegion;
+
+	@Override
+	protected ZoneModel self() {
+		return this;
+	}
 
 	public String getSystemName() {
 		return systemName;
@@ -42,8 +51,11 @@ public class ZoneModel extends DefinitionModelAbstract<ZoneModel> {
 		return this;
 	}
 
-	@Override
-	protected ZoneModel self() {
-		return this;
+	public void setRefRegion(RegionModel refRegion) {
+		this.refRegion = refRegion;
+	}
+
+	public RegionModel getRefRegion() {
+		return refRegion;
 	}
 }
