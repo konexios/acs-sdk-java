@@ -22,6 +22,7 @@ public class CompanyModel extends AuditableDocumentModelAbstract<CompanyModel> {
 	private ContactModel billingContact;
 	private PasswordPolicyModel passwordPolicy;
 	private LoginPolicyModel loginPolicy;
+	private String parentCompanyHid;
 
 	@Override
 	protected CompanyModel self() {
@@ -70,6 +71,11 @@ public class CompanyModel extends AuditableDocumentModelAbstract<CompanyModel> {
 
 	public CompanyModel withLoginPolicy(LoginPolicyModel loginPolicy) {
 		setLoginPolicy(loginPolicy);
+		return this;
+	}
+
+	public CompanyModel withParentCompanyHid(String parentCompanyHid) {
+		setParentCompanyHid(parentCompanyHid);
 		return this;
 	}
 
@@ -143,5 +149,13 @@ public class CompanyModel extends AuditableDocumentModelAbstract<CompanyModel> {
 
 	public void setLoginPolicy(LoginPolicyModel loginPolicy) {
 		this.loginPolicy = loginPolicy;
+	}
+
+	public String getParentCompanyHid() {
+		return parentCompanyHid;
+	}
+
+	public void setParentCompanyHid(String parentCompanyHid) {
+		this.parentCompanyHid = parentCompanyHid;
 	}
 }
