@@ -16,12 +16,14 @@ public final class AcsClient {
 	private ApiConfig apiConfig;
 	private ClientCacheApi cacheApi;
 	private ClientUserApi userApi;
+	private ClientApplicationApi applicationApi;
 
 	public AcsClient(ApiConfig apiConfig) {
 		Validate.notNull(apiConfig, "apiConfig is not set");
 		this.apiConfig = apiConfig;
 		this.cacheApi = new ClientCacheApi(apiConfig);
 		this.userApi = new ClientUserApi(apiConfig);
+		this.applicationApi = new ClientApplicationApi(apiConfig);
 	}
 
 	public void setApiConfig(ApiConfig apiConfig) {
@@ -41,5 +43,9 @@ public final class AcsClient {
 
 	public ClientUserApi getUserApi() {
 		return userApi;
+	}
+
+	public ClientApplicationApi getApplicationApi() {
+		return applicationApi;
 	}
 }
