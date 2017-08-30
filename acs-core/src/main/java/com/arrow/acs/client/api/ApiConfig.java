@@ -16,11 +16,17 @@ public class ApiConfig implements Serializable {
 	private static final long serialVersionUID = 3202503635018331127L;
 
 	private String baseUrl;
+	private String baseWebSocketUrl;
 	private String apiKey;
 	private String secretKey;
 
 	public ApiConfig withBaseUrl(String baseUrl) {
 		setBaseUrl(baseUrl);
+		return this;
+	}
+
+	public ApiConfig withBaseWebSocketUrl(String baseWebSocketUrl) {
+		setBaseWebSocketUrl(baseWebSocketUrl);
 		return this;
 	}
 
@@ -40,6 +46,14 @@ public class ApiConfig implements Serializable {
 
 	public void setBaseUrl(String baseUrl) {
 		this.baseUrl = baseUrl;
+	}
+
+	public String getBaseWebSocketUrl() {
+		return baseWebSocketUrl;
+	}
+
+	public void setBaseWebSocketUrl(String baseWebSocketUrl) {
+		this.baseWebSocketUrl = baseWebSocketUrl;
 	}
 
 	public String getApiKey() {

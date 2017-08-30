@@ -69,6 +69,20 @@ public abstract class ApiAbstract extends Loggable {
 	public URI buildUri(String path, SearchCriteria criteria) {
 		Validate.notNull(apiConfig, "apiConfig is not set");
 		String baseUrl = apiConfig.getBaseUrl();
+		return buildUri(baseUrl, path, criteria);
+	}
+
+	public URI buildWebSocketUri(String path) {
+		return buildWebSocketUri(path, null);
+	}
+
+	public URI buildWebSocketUri(String path, SearchCriteria criteria) {
+		Validate.notNull(apiConfig, "apiConfig is not set");
+		String baseUrl = apiConfig.getBaseWebSocketUrl();
+		return buildUri(baseUrl, path, criteria);
+	}
+
+	private URI buildUri(String baseUrl, String path, SearchCriteria criteria) {
 		try {
 			URIBuilder uriBuilder = new URIBuilder(StringUtils.isBlank(baseUrl) ? "" : baseUrl);
 			if (!StringUtils.isEmpty(path)) {
