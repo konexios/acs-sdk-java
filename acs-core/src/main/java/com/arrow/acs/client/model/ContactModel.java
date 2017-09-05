@@ -97,6 +97,10 @@ public class ContactModel implements Serializable {
 		this.lastName = lastName;
 	}
 
+	public String fullName() {
+		return firstName + " " + lastName;
+	}
+
 	public String getEmail() {
 		return email;
 	}
