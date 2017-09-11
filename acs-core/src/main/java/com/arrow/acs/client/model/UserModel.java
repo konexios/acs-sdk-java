@@ -22,6 +22,7 @@ public class UserModel extends AuditableDocumentModelAbstract<UserModel> {
 	private UserStatus status;
 	private String companyHid;
 	private ContactModel contact;
+	private AddressModel address;
 	private List<String> roleHids = new ArrayList<>();
 	@JsonIgnore
 	private List<RoleModel> refRoles = new ArrayList<>();
@@ -48,6 +49,11 @@ public class UserModel extends AuditableDocumentModelAbstract<UserModel> {
 
 	public UserModel withContact(ContactModel contact) {
 		setContact(contact);
+		return this;
+	}
+
+	public UserModel withAddress(AddressModel address) {
+		setAddress(address);
 		return this;
 	}
 
@@ -86,6 +92,14 @@ public class UserModel extends AuditableDocumentModelAbstract<UserModel> {
 
 	public void setContact(ContactModel contact) {
 		this.contact = contact;
+	}
+
+	public AddressModel getAddress() {
+		return address;
+	}
+
+	public void setAddress(AddressModel address) {
+		this.address = address;
 	}
 
 	public List<String> getRoleHids() {
