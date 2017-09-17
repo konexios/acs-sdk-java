@@ -8,13 +8,12 @@
  * Contributors:
  *     Arrow Electronics, Inc.
  *******************************************************************************/
-package com.arrow.acs.client.api;
+package com.arrow.acs.client.model;
 
-abstract class ClientApiAbstract extends ApiAbstract {
-	protected static final String WEB_SERVICE_ROOT_URL = "/api/v1/pegasus";
-
-	ClientApiAbstract(ApiConfig apiConfig) {
-		super();
-		setApiConfig(apiConfig);
-	}
+public enum AuthType {
+	// @formatter:off     
+	LDAP, 
+	SAML
+	// @formatter:on    
 }
+

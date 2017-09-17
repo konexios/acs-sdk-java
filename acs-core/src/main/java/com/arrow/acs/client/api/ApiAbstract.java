@@ -69,6 +69,20 @@ public abstract class ApiAbstract extends Loggable {
 	public URI buildUri(String path, SearchCriteria criteria) {
 		Validate.notNull(apiConfig, "apiConfig is not set");
 		String baseUrl = apiConfig.getBaseUrl();
+		return buildUri(baseUrl, path, criteria);
+	}
+
+	public URI buildWebSocketUri(String path) {
+		return buildWebSocketUri(path, null);
+	}
+
+	public URI buildWebSocketUri(String path, SearchCriteria criteria) {
+		Validate.notNull(apiConfig, "apiConfig is not set");
+		String baseUrl = apiConfig.getBaseWebSocketUrl();
+		return buildUri(baseUrl, path, criteria);
+	}
+
+	private URI buildUri(String baseUrl, String path, SearchCriteria criteria) {
 		try {
 			URIBuilder uriBuilder = new URIBuilder(StringUtils.isBlank(baseUrl) ? "" : baseUrl);
 			if (!StringUtils.isEmpty(path)) {
@@ -108,16 +122,14 @@ public abstract class ApiAbstract extends Loggable {
 	        throws IOException {
 		Validate.notNull(criteria, "criteria is null");
 		Validate.notNull(apiConfig, "apiConfig is not set");
-		String method = "execute";
-		Instant timestamp = Instant.now();
-		ApiRequestSigner signer = getSigner(request, timestamp);
-		for (NameValuePair pair : criteria.getAllCriteria()) {
-			signer.parameter(pair.getName(), pair.getValue());
-		}
-		String signature = signer.signV1();
-		logDebug(method, SIGNATURE_MSG, signature);
-		addHeaders(request, timestamp, signature);
-		return JsonUtils.fromJson(execute(request), typeRef);
+		return JsonUtils.fromJson(execute(sign(request, criteria)), typeRef);
+	}
+
+	public <T> T execute(HttpRequestBase request, SearchCriteria criteria, Class<T> clazz)
+	        throws IOException {
+		Validate.notNull(criteria, "criteria is null");
+		Validate.notNull(apiConfig, "apiConfig is not set");
+		return JsonUtils.fromJson(execute(sign(request, criteria)), clazz);
 	}
 
 	public long execute(HttpRequestBase request, OutputStream outputStream) throws IOException {
@@ -167,9 +179,19 @@ public abstract class ApiAbstract extends Loggable {
 	}
 
 	private HttpRequestBase sign(HttpRequestBase request) {
+		return sign(request, null);
+	}
+
+	private HttpRequestBase sign(HttpRequestBase request, SearchCriteria criteria) {
 		String method = "sign";
 		Instant timestamp = Instant.now();
-		String signature = getSigner(request, timestamp).signV1();
+		ApiRequestSigner signer = getSigner(request, timestamp);
+		if (criteria != null) {
+			for (NameValuePair pair : criteria.getAllCriteria()) {
+				signer.parameter(pair.getName(), pair.getValue());
+			}
+		}
+		String signature = signer.signV1();
 		logDebug(method, SIGNATURE_MSG, signature);
 		addHeaders(request, timestamp, signature);
 		return request;

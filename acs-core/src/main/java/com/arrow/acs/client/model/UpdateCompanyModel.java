@@ -8,13 +8,19 @@
  * Contributors:
  *     Arrow Electronics, Inc.
  *******************************************************************************/
-package com.arrow.acs.client.api;
+package com.arrow.acs.client.model;
 
-abstract class ClientApiAbstract extends ApiAbstract {
-	protected static final String WEB_SERVICE_ROOT_URL = "/api/v1/pegasus";
+public class UpdateCompanyModel extends CreateCompanyModel {
 
-	ClientApiAbstract(ApiConfig apiConfig) {
-		super();
-		setApiConfig(apiConfig);
+	private static final long serialVersionUID = -9081043332686188722L;
+
+	private String hid;
+
+	public String getHid() {
+		return hid;
+	}
+
+	public void setHid(String hid) {
+		this.hid = hid;
 	}
 }

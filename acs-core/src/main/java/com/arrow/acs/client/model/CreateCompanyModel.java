@@ -10,8 +10,11 @@
  *******************************************************************************/
 package com.arrow.acs.client.model;
 
-public class CompanyModel extends AuditableDocumentModelAbstract<CompanyModel> {
-	private static final long serialVersionUID = -1173608869956123803L;
+import java.io.Serializable;
+
+public class CreateCompanyModel implements Serializable {
+
+	private static final long serialVersionUID = 737309244917140959L;
 
 	private String name;
 	private String abbrName;
@@ -23,61 +26,6 @@ public class CompanyModel extends AuditableDocumentModelAbstract<CompanyModel> {
 	private PasswordPolicyModel passwordPolicy;
 	private LoginPolicyModel loginPolicy;
 	private String parentCompanyHid;
-
-	@Override
-	protected CompanyModel self() {
-		return this;
-	}
-
-	public CompanyModel withName(String name) {
-		setName(name);
-		return this;
-	}
-
-	public CompanyModel withAbbrName(String abbrName) {
-		setAbbrName(abbrName);
-		return this;
-	}
-
-	public CompanyModel withStatus(CompanyStatus status) {
-		setStatus(status);
-		return this;
-	}
-
-	public CompanyModel withAddress(AddressModel address) {
-		setAddress(address);
-		return this;
-	}
-
-	public CompanyModel withBillingAddress(AddressModel address) {
-		setBillingAddress(address);
-		return this;
-	}
-
-	public CompanyModel withContact(ContactModel contact) {
-		setContact(contact);
-		return this;
-	}
-
-	public CompanyModel withBillingContact(ContactModel contact) {
-		setBillingContact(contact);
-		return this;
-	}
-
-	public CompanyModel withPasswordPolicy(PasswordPolicyModel passwordPolicy) {
-		setPasswordPolicy(passwordPolicy);
-		return this;
-	}
-
-	public CompanyModel withLoginPolicy(LoginPolicyModel loginPolicy) {
-		setLoginPolicy(loginPolicy);
-		return this;
-	}
-
-	public CompanyModel withParentCompanyHid(String parentCompanyHid) {
-		setParentCompanyHid(parentCompanyHid);
-		return this;
-	}
 
 	public String getName() {
 		return name;

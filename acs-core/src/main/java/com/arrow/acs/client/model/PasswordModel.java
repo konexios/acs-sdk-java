@@ -8,13 +8,25 @@
  * Contributors:
  *     Arrow Electronics, Inc.
  *******************************************************************************/
-package com.arrow.acs.client.api;
+package com.arrow.acs.client.model;
 
-abstract class ClientApiAbstract extends ApiAbstract {
-	protected static final String WEB_SERVICE_ROOT_URL = "/api/v1/pegasus";
+import java.io.Serializable;
 
-	ClientApiAbstract(ApiConfig apiConfig) {
-		super();
-		setApiConfig(apiConfig);
+public class PasswordModel implements Serializable {
+	private static final long serialVersionUID = 3108123494888832412L;
+	
+	private String password;
+
+	public PasswordModel withPassword(String password) {
+		setPassword(password);
+		return this;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 }
