@@ -24,9 +24,10 @@ public abstract class VersionAbstract {
 		        .withDescription("Unknown");
 		try {
 			Manifest manifest = ManifestUtils.readManifest(clazz);
-			String title = manifest.getMainAttributes().getValue(Attributes.Name.IMPLEMENTATION_TITLE);
+			Attributes attrs = manifest.getMainAttributes();
+			String title = attrs.getValue(Attributes.Name.IMPLEMENTATION_TITLE);
 			model.withName(title).withDescription(title);
-			String version = manifest.getMainAttributes().getValue(Attributes.Name.IMPLEMENTATION_VERSION);
+			String version = attrs.getValue(Attributes.Name.IMPLEMENTATION_VERSION);
 			String[] tokens = version.split("\\.");
 			if (tokens.length > 0) {
 				try {
@@ -46,6 +47,10 @@ public abstract class VersionAbstract {
 					}
 				}
 			}
+			model.withVendor(attrs.getValue(Attributes.Name.IMPLEMENTATION_VENDOR));
+			model.withBuiltBy(attrs.getValue("Built-By"));
+			model.withBuiltDate(attrs.getValue("Built-Date"));
+			model.withBuiltJdk(attrs.getValue("Built-Jdk"));
 		} catch (Throwable t) {
 		}
 		return model;

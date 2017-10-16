@@ -18,9 +18,35 @@ public class VersionModel extends DefinitionModelAbstract<VersionModel> {
 	private Integer build;
 	private Integer compatibleMajor;
 	private Integer compatibleMinor;
+	private String vendor;
+
+	// build info
+	private String builtBy;
+	private String builtJdk;
+	private String builtDate;
 
 	@Override
 	protected VersionModel self() {
+		return this;
+	}
+
+	public VersionModel withVendor(String vendor) {
+		setVendor(vendor);
+		return this;
+	}
+
+	public VersionModel withBuiltBy(String builtBy) {
+		setBuiltBy(builtBy);
+		return this;
+	}
+
+	public VersionModel withBuiltJdk(String buildJdk) {
+		setBuiltJdk(buildJdk);
+		return this;
+	}
+
+	public VersionModel withBuiltDate(String builtDate) {
+		setBuiltDate(builtDate);
 		return this;
 	}
 
@@ -87,5 +113,37 @@ public class VersionModel extends DefinitionModelAbstract<VersionModel> {
 
 	public void setCompatibleMinor(Integer compatibleMinor) {
 		this.compatibleMinor = compatibleMinor;
+	}
+
+	public String getVendor() {
+		return vendor;
+	}
+
+	public void setVendor(String vendor) {
+		this.vendor = vendor;
+	}
+
+	public String getBuiltBy() {
+		return builtBy;
+	}
+
+	public void setBuiltBy(String builtBy) {
+		this.builtBy = builtBy;
+	}
+
+	public String getBuiltJdk() {
+		return builtJdk;
+	}
+
+	public void setBuiltJdk(String builtJdk) {
+		this.builtJdk = builtJdk;
+	}
+
+	public String getBuiltDate() {
+		return builtDate;
+	}
+
+	public void setBuiltDate(String builtDate) {
+		this.builtDate = builtDate;
 	}
 }
