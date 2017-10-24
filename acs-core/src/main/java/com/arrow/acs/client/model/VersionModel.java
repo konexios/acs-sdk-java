@@ -24,9 +24,15 @@ public class VersionModel extends DefinitionModelAbstract<VersionModel> {
 	private String builtBy;
 	private String builtJdk;
 	private String builtDate;
+	private String gitBranch;
 
 	@Override
 	protected VersionModel self() {
+		return this;
+	}
+
+	public VersionModel withGitBranch(String gitBranch) {
+		setGitBranch(gitBranch);
 		return this;
 	}
 
@@ -145,5 +151,13 @@ public class VersionModel extends DefinitionModelAbstract<VersionModel> {
 
 	public void setBuiltDate(String builtDate) {
 		this.builtDate = builtDate;
+	}
+
+	public String getGitBranch() {
+		return gitBranch;
+	}
+
+	public void setGitBranch(String gitBranch) {
+		this.gitBranch = gitBranch;
 	}
 }
