@@ -10,9 +10,13 @@
  *******************************************************************************/
 package com.arrow.acs.client.model;
 
-public class VersionModel extends DefinitionModelAbstract<VersionModel> {
+import java.io.Serializable;
+
+public class VersionModel implements Serializable {
 	private static final long serialVersionUID = -5828507529810423672L;
 
+	private String name;
+	private String description;
 	private Integer major;
 	private Integer minor;
 	private Integer build;
@@ -26,8 +30,13 @@ public class VersionModel extends DefinitionModelAbstract<VersionModel> {
 	private String builtDate;
 	private String gitBranch;
 
-	@Override
-	protected VersionModel self() {
+	public VersionModel withName(String name) {
+		setName(name);
+		return this;
+	}
+
+	public VersionModel withDescription(String description) {
+		setDescription(description);
 		return this;
 	}
 
@@ -79,6 +88,22 @@ public class VersionModel extends DefinitionModelAbstract<VersionModel> {
 	public VersionModel withCompatibleMinor(Integer compatibleMinor) {
 		setCompatibleMinor(compatibleMinor);
 		return this;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public Integer getMajor() {
