@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.loader.jar.JarFile;
 
 public class ManifestUtils {
+	private static final String JAR_FILE_PREFIX = "jar:file:";
 	private final static Loggable LOGGER = new Loggable(ManifestUtils.class.getName()) {
 	};
 
@@ -29,8 +30,8 @@ public class ManifestUtils {
 		String jarFile = null;
 		String path = clazz.getProtectionDomain().getCodeSource().getLocation().toString();
 
-		if (path.startsWith("jar:file:/")) {
-			jarFile = path.substring(10);
+		if (path.startsWith(JAR_FILE_PREFIX)) {
+			jarFile = path.substring(JAR_FILE_PREFIX.length());
 		}
 
 		LOGGER.logInfo(method, "className: %s, path: %s, jarFile: %s", clazz.getName(), path, jarFile);
@@ -52,6 +53,9 @@ public class ManifestUtils {
 					return file.getManifest();
 				}
 			} else {
+				if (!path.endsWith("/")) {
+					path += "/";
+				}
 				URL url = new URL(path + "META-INF/MANIFEST.MF");
 				LOGGER.logInfo(method, "trying to load manifest from: %s", url.toString());
 				return new Manifest(is = url.openStream());
