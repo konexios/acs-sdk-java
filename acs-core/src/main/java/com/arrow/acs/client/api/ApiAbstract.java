@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.arrow.acs.client.api;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
@@ -18,10 +19,11 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.regex.Pattern;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -38,6 +40,7 @@ import com.arrow.acs.ApiRequestSigner;
 import com.arrow.acs.JsonUtils;
 import com.arrow.acs.Loggable;
 import com.arrow.acs.client.AcsClientException;
+import com.arrow.acs.client.model.DownloadFileInfo;
 import com.arrow.acs.client.model.ExternalHidModel;
 import com.arrow.acs.client.model.HidModel;
 import com.arrow.acs.client.model.ListResultModel;
@@ -45,6 +48,7 @@ import com.arrow.acs.client.model.ModelAbstract;
 import com.arrow.acs.client.model.PagingResultModel;
 import com.arrow.acs.client.model.StatusModel;
 import com.arrow.acs.client.search.SearchCriteria;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 public abstract class ApiAbstract extends Loggable {
 
@@ -125,8 +129,7 @@ public abstract class ApiAbstract extends Loggable {
 		return JsonUtils.fromJson(execute(sign(request, criteria)), typeRef);
 	}
 
-	public <T> T execute(HttpRequestBase request, SearchCriteria criteria, Class<T> clazz)
-	        throws IOException {
+	public <T> T execute(HttpRequestBase request, SearchCriteria criteria, Class<T> clazz) throws IOException {
 		Validate.notNull(criteria, "criteria is null");
 		Validate.notNull(apiConfig, "apiConfig is not set");
 		return JsonUtils.fromJson(execute(sign(request, criteria)), clazz);
@@ -148,6 +151,45 @@ public abstract class ApiAbstract extends Loggable {
 				        new AcsErrorResponse().withStatus(statusCode).withMessage(message));
 			}
 			return IOUtils.copyLarge(response.getEntity().getContent(), outputStream);
+		}
+	}
+
+	public DownloadFileInfo downloadFile(HttpRequestBase request) throws IOException {
+		Validate.notNull(request, "request is null");
+		Validate.notNull(apiConfig, "apiConfig is not set");
+		String method = "execute";
+		logInfo(method, "url: %s", request.getURI());
+		try (CloseableHttpClient httpClient = ConnectionManager.getInstance().getConnection()) {
+			HttpResponse response = httpClient.execute(sign(request));
+			int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode != HttpStatus.SC_OK) {
+				String content = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+				String message = String.format("error response: %d - %s, error: %s", statusCode,
+				        response.getStatusLine().getReasonPhrase(), content);
+				throw new AcsClientException(message,
+				        new AcsErrorResponse().withStatus(statusCode).withMessage(message));
+			}
+			String fileName = null;
+			Header contentDispositionHeader = response.getFirstHeader("Content-Disposition");
+			if (contentDispositionHeader != null) {
+				String contentDisposition = contentDispositionHeader.getValue();
+				logInfo(method, "found Content-Disposition: %s", contentDisposition);
+				String[] tokens = contentDisposition.split(";", -1);
+				for (String token : tokens) {
+					if (token.contains("=")) {
+						String[] values = token.split("=");
+						if (values.length == 2 && values[0].trim().equalsIgnoreCase("filename")) {
+							fileName = values[1].trim().replace("\"", "");
+						}
+					}
+				}
+				logInfo(method, "fileName: %s", fileName);
+			} else {
+				logWarn(method, "Content-Disposition header not found!");
+			}
+			File tempFile = File.createTempFile("acs_", ".dat");
+			FileUtils.copyInputStreamToFile(response.getEntity().getContent(), tempFile);
+			return new DownloadFileInfo().withTempFile(tempFile).withFileName(fileName).withSize(tempFile.length());
 		}
 	}
 
@@ -243,6 +285,11 @@ public abstract class ApiAbstract extends Loggable {
 	protected void log(String method, PagingResultModel<?> model) {
 		logDebug(method, "size: %d, totalSize: %d, page: %d, totalPage: %d", model.getSize(), model.getTotalSize(),
 		        model.getPage(), model.getTotalPages());
+	}
+
+	protected void log(String method, DownloadFileInfo model) {
+		logDebug(method, "tempFile: %s, fileName: %s, size: %d", model.getTempFile().getAbsolutePath(),
+		        model.getFileName(), model.getSize());
 	}
 
 	protected AcsClientException handleException(Throwable t) {
