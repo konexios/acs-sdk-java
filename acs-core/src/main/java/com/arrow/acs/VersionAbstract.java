@@ -52,6 +52,7 @@ public abstract class VersionAbstract {
 			model.withBuiltDate(attrs.getValue("Built-Date"));
 			model.withBuiltJdk(attrs.getValue("Built-Jdk"));
 			model.withGitBranch(attrs.getValue("Git-Branch"));
+			model.withGitLastCommit(attrs.getValue("Git-Last-Commit"));
 		} catch (Throwable t) {
 		}
 		return model;

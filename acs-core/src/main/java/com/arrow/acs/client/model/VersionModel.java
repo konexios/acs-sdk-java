@@ -29,6 +29,7 @@ public class VersionModel implements Serializable {
 	private String builtJdk;
 	private String builtDate;
 	private String gitBranch;
+	private String gitLastCommit;
 
 	public VersionModel withName(String name) {
 		setName(name);
@@ -42,6 +43,11 @@ public class VersionModel implements Serializable {
 
 	public VersionModel withGitBranch(String gitBranch) {
 		setGitBranch(gitBranch);
+		return this;
+	}
+
+	public VersionModel withGitLastCommit(String gitLastCommit) {
+		setGitLastCommit(gitLastCommit);
 		return this;
 	}
 
@@ -184,5 +190,13 @@ public class VersionModel implements Serializable {
 
 	public void setGitBranch(String gitBranch) {
 		this.gitBranch = gitBranch;
+	}
+
+	public String getGitLastCommit() {
+		return gitLastCommit;
+	}
+
+	public void setGitLastCommit(String gitLastCommit) {
+		this.gitLastCommit = gitLastCommit;
 	}
 }
