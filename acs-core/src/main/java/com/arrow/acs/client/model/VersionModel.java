@@ -10,17 +10,64 @@
  *******************************************************************************/
 package com.arrow.acs.client.model;
 
-public class VersionModel extends DefinitionModelAbstract<VersionModel> {
+import java.io.Serializable;
+
+public class VersionModel implements Serializable {
 	private static final long serialVersionUID = -5828507529810423672L;
 
+	private String name;
+	private String description;
 	private Integer major;
 	private Integer minor;
 	private Integer build;
 	private Integer compatibleMajor;
 	private Integer compatibleMinor;
+	private String vendor;
 
-	@Override
-	protected VersionModel self() {
+	// build info
+	private String builtBy;
+	private String builtJdk;
+	private String builtDate;
+	private String gitBranch;
+	private String gitLastCommit;
+
+	public VersionModel withName(String name) {
+		setName(name);
+		return this;
+	}
+
+	public VersionModel withDescription(String description) {
+		setDescription(description);
+		return this;
+	}
+
+	public VersionModel withGitBranch(String gitBranch) {
+		setGitBranch(gitBranch);
+		return this;
+	}
+
+	public VersionModel withGitLastCommit(String gitLastCommit) {
+		setGitLastCommit(gitLastCommit);
+		return this;
+	}
+
+	public VersionModel withVendor(String vendor) {
+		setVendor(vendor);
+		return this;
+	}
+
+	public VersionModel withBuiltBy(String builtBy) {
+		setBuiltBy(builtBy);
+		return this;
+	}
+
+	public VersionModel withBuiltJdk(String buildJdk) {
+		setBuiltJdk(buildJdk);
+		return this;
+	}
+
+	public VersionModel withBuiltDate(String builtDate) {
+		setBuiltDate(builtDate);
 		return this;
 	}
 
@@ -47,6 +94,22 @@ public class VersionModel extends DefinitionModelAbstract<VersionModel> {
 	public VersionModel withCompatibleMinor(Integer compatibleMinor) {
 		setCompatibleMinor(compatibleMinor);
 		return this;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public Integer getMajor() {
@@ -87,5 +150,53 @@ public class VersionModel extends DefinitionModelAbstract<VersionModel> {
 
 	public void setCompatibleMinor(Integer compatibleMinor) {
 		this.compatibleMinor = compatibleMinor;
+	}
+
+	public String getVendor() {
+		return vendor;
+	}
+
+	public void setVendor(String vendor) {
+		this.vendor = vendor;
+	}
+
+	public String getBuiltBy() {
+		return builtBy;
+	}
+
+	public void setBuiltBy(String builtBy) {
+		this.builtBy = builtBy;
+	}
+
+	public String getBuiltJdk() {
+		return builtJdk;
+	}
+
+	public void setBuiltJdk(String builtJdk) {
+		this.builtJdk = builtJdk;
+	}
+
+	public String getBuiltDate() {
+		return builtDate;
+	}
+
+	public void setBuiltDate(String builtDate) {
+		this.builtDate = builtDate;
+	}
+
+	public String getGitBranch() {
+		return gitBranch;
+	}
+
+	public void setGitBranch(String gitBranch) {
+		this.gitBranch = gitBranch;
+	}
+
+	public String getGitLastCommit() {
+		return gitLastCommit;
+	}
+
+	public void setGitLastCommit(String gitLastCommit) {
+		this.gitLastCommit = gitLastCommit;
 	}
 }

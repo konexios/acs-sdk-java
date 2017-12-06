@@ -1,12 +1,14 @@
-version = '2.1'
-
-jar {
+jar.doFirst {
     manifest {
         attributes(
-            "Created-By": "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})",
             "Implementation-Title": "Arrow Cloud Services (ACS) - Core",
             "Implementation-Version": version,
-            "Implementation-Vendor": "Arrow Electronics, Inc.")                        
+            "Implementation-Vendor": "Arrow Electronics, Inc.",
+            "Built-By": System.getProperty('user.name'),
+            "Built-Date": new Date().format("yyyy-MM-dd"),
+            "Built-Jdk": "${System.getProperty('java.version')} (${System.getProperty('java.specification.vendor')})",
+            "Git-Branch": getCurrentGitBranch(),
+            "Git-Last-Commit": getLastGitCommit())
     }
 }
 
@@ -14,8 +16,8 @@ dependencies {
     compile("commons-io:commons-io:2.5")
     compile("commons-codec:commons-codec:1.10")
 
-    compile("org.apache.commons:commons-lang3:3.5")
-    compile("org.apache.httpcomponents:httpclient:4.5.2")
+    compile("org.apache.commons:commons-lang3:3.6")
+    compile("org.apache.httpcomponents:httpclient:4.5.3")
     
     compile("org.apache.logging.log4j:log4j-api:${log4jVersion}")
     compile("org.apache.logging.log4j:log4j-core:${log4jVersion}")
@@ -24,8 +26,11 @@ dependencies {
     compile("com.fasterxml.jackson.core:jackson-core:${jacksonVersion}")
     compile("com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}")
     compile("com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}")
-    compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}")                  
+    compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}")
+    
+    compile("org.springframework.boot:spring-boot-loader:1.5.8.RELEASE")
 }
+
 
 def jarToCopy = copySpec {
     from "build/libs/${jar.archiveName}"
@@ -35,5 +40,37 @@ task copyJar(dependsOn: jar) << {
     copy {
         with jarToCopy
         into "../../lib"
+    }
+    copy {
+        with jarToCopy
+        into "../../acn-sdk-java/lib"
+    }
+    copy {
+        with jarToCopy
+        into "../../acs-app-java/lib"
+    }
+    copy {
+        with jarToCopy
+        into "../../pegasus/pegasus-core/lib"
+    }
+    copy {
+        with jarToCopy
+        into "../../kronos/lib"
+    }
+    copy {
+        with jarToCopy
+        into "../../rhea/lib"
+    }
+    copy {
+        with jarToCopy
+        into "../../selene/lib"
+    }
+    copy {
+        with jarToCopy
+        into "../../hyperion/lib"
+    }
+    copy {
+        with jarToCopy
+        into "../../apollo/lib"
     }
 }
