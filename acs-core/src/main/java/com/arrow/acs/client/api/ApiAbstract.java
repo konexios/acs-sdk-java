@@ -139,7 +139,7 @@ public abstract class ApiAbstract extends Loggable {
 		Validate.notNull(request, "request is null");
 		Validate.notNull(apiConfig, "apiConfig is not set");
 		String method = "execute";
-		logInfo(method, "url: %s", request.getURI());
+		logInfo(method, "URI: %s", request.getURI());
 		try (CloseableHttpClient httpClient = ConnectionManager.getInstance().getConnection()) {
 			HttpResponse response = httpClient.execute(sign(request));
 			int statusCode = response.getStatusLine().getStatusCode();
@@ -196,7 +196,7 @@ public abstract class ApiAbstract extends Loggable {
 	private String execute(HttpRequestBase request) throws IOException {
 		Validate.notNull(request, "request is null");
 		String method = "execute";
-		logInfo(method, "url: %s", request.getURI());
+		logInfo(method, "URI: %s", request.getURI());
 		try (CloseableHttpClient httpClient = ConnectionManager.getInstance().getConnection()) {
 			HttpResponse response = httpClient.execute(request);
 			String content = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
