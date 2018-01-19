@@ -21,6 +21,8 @@ public class ApplicationModel extends DefinitionModelAbstract<ApplicationModel> 
 	private YesNoInherit apiSigningRequired;
 	private String defaultSamlEntityId;
 	private String code;
+	private String zoneSystemName;
+	private String zoneHid;
 	@JsonIgnore
 	private CompanyModel refCompany;
 	@JsonIgnore
@@ -55,6 +57,16 @@ public class ApplicationModel extends DefinitionModelAbstract<ApplicationModel> 
 
 	public ApplicationModel withCode(String code) {
 		setCode(code);
+		return this;
+	}
+	
+	public ApplicationModel withZoneHid(String zoneHid) {
+		setZoneHid(zoneHid);
+		return this;
+	}
+	
+	public ApplicationModel withZoneSystemName(String zoneSystemName) {
+		setZoneSystemName(zoneSystemName);
 		return this;
 	}
 
@@ -133,5 +145,21 @@ public class ApplicationModel extends DefinitionModelAbstract<ApplicationModel> 
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public String getZoneSystemName() {
+		return zoneSystemName;
+	}
+
+	public void setZoneSystemName(String zoneSystemName) {
+		this.zoneSystemName = zoneSystemName;
+	}
+
+	public String getZoneHid() {
+		return zoneHid;
+	}
+
+	public void setZoneHid(String zoneHid) {
+		this.zoneHid = zoneHid;
 	}
 }
