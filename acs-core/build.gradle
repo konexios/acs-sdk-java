@@ -74,3 +74,15 @@ task copyJar(dependsOn: jar) << {
         into "../../apollo/lib"
     }
 }
+
+task jenkinsOutput() {
+    copy {
+        with jarToCopy
+        into "/data1/jenkins/workspace/global-libs"
+    }
+}
+
+task jenkinsBuild(type: GradleBuild) {
+    tasks = ['jar', 'jenkinsOutput']
+}
+
