@@ -10,16 +10,18 @@
  *******************************************************************************/
 package com.arrow.acs.client.model;
 
-import java.io.Serializable;
-
-public class UserAppModel implements Serializable {
+public class UserAppModel extends UserModel {
 
 	private static final long serialVersionUID = 2516879981186432405L;
 
 	private String applicationHid;
+	private String applicationName;
 	private String userHid;
-	private String companyHid;
 	private String zoneSystemName;
+	private String zoneHid;
+	private String zoneName;
+	private String regionHid;
+	private String regionName;
 
 	public String getApplicationHid() {
 		return applicationHid;
@@ -27,6 +29,14 @@ public class UserAppModel implements Serializable {
 
 	public void setApplicationHid(String applicationHid) {
 		this.applicationHid = applicationHid;
+	}
+
+	public String getApplicationName() {
+		return applicationName;
+	}
+
+	public void setApplicationName(String applicationName) {
+		this.applicationName = applicationName;
 	}
 
 	public String getUserHid() {
@@ -37,19 +47,43 @@ public class UserAppModel implements Serializable {
 		this.userHid = userHid;
 	}
 
-	public String getCompanyHid() {
-		return companyHid;
-	}
-
-	public void setCompanyHid(String companyHid) {
-		this.companyHid = companyHid;
-	}
-
 	public String getZoneSystemName() {
 		return zoneSystemName;
 	}
 
 	public void setZoneSystemName(String zoneSystemName) {
 		this.zoneSystemName = zoneSystemName;
+	}
+
+	public String getZoneHid() {
+		return zoneHid;
+	}
+
+	public void setZoneHid(String zoneHid) {
+		this.zoneHid = zoneHid;
+	}
+
+	public String getZoneName() {
+		return zoneName;
+	}
+
+	public void setZoneName(String zoneName) {
+		this.zoneName = zoneName;
+	}
+
+	public String getRegionHid() {
+		return regionHid;
+	}
+
+	public void setRegionHid(String regionHid) {
+		this.regionHid = regionHid;
+	}
+
+	public String getRegionName() {
+		return regionName;
+	}
+
+	public void setRegionName(String regionName) {
+		this.regionName = regionName;
 	}
 }
