@@ -2,7 +2,7 @@ package com.arrow.acs.client.model;
 
 public class SocialEventModel extends AuditableDocumentModelAbstract<SocialEventModel> {
 
-	private static final long serialVersionUID = 3216230562782438923L;
+	private static final long serialVersionUID = 6192819880679221475L;
 
 	private String name;
 	private String startDate;
@@ -11,6 +11,7 @@ public class SocialEventModel extends AuditableDocumentModelAbstract<SocialEvent
 	private String latitude;
 	private String longitude;
 	private Integer zoomLevel;
+	private String zoneSystemName;
 
 	@Override
 	protected SocialEventModel self() {
@@ -71,6 +72,14 @@ public class SocialEventModel extends AuditableDocumentModelAbstract<SocialEvent
 
 	public void setZoomLevel(Integer zoomLevel) {
 		this.zoomLevel = zoomLevel;
+	}
+
+	public String getZoneSystemName() {
+		return zoneSystemName;
+	}
+
+	public void setZoneSystemName(String zoneSystemName) {
+		this.zoneSystemName = zoneSystemName;
 	}
 
 }
