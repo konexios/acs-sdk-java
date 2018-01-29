@@ -8,28 +8,22 @@
  * Contributors:
  *     Arrow Electronics, Inc.
  *******************************************************************************/
-package com.arrow.acs.client.model;
+package com.arrow.acs;
 
-public class ExternalHidModel extends HidModel {
-	private static final long serialVersionUID = -4548385746085920390L;
+public final class KeyValuePair<K, V> {
+	private final K key;
+	private final V value;
 
-	private String externalId;
-
-	public ExternalHidModel withExternalId(String externalId) {
-		setExternalId(externalId);
-		return this;
+	public KeyValuePair(K key, V value) {
+		this.key = key;
+		this.value = value;
 	}
 
-	public String getExternalId() {
-		return externalId;
+	public K getKey() {
+		return key;
 	}
 
-	public void setExternalId(String externalId) {
-		this.externalId = externalId;
-	}
-
-	@Override
-	protected HidModel self() {
-		return this;
+	public V getValue() {
+		return value;
 	}
 }

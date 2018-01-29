@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Arrow Electronics, Inc.
+ * Copyright (c) 2018 Arrow Electronics, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License 2.0
  * which accompanies this distribution, and is available at
@@ -18,8 +18,6 @@ import java.util.List;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.codec.digest.HmacUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
 
 public class ApiRequestSigner extends Loggable {
 	private String secretKey;
@@ -37,34 +35,34 @@ public class ApiRequestSigner extends Loggable {
 	}
 
 	public static ApiRequestSigner create(String secretKey) {
-		Validate.notEmpty(secretKey, "secretKey is empty");
+		AcsUtils.notEmpty(secretKey, "secretKey is empty");
 		return new ApiRequestSigner(secretKey);
 	}
 
 	public ApiRequestSigner payload(String payload) {
-		Validate.notNull(payload, "payload is null");
+		AcsUtils.notNull(payload, "payload is null");
 		this.payload = payload;
 		return this;
 	}
 
 	public ApiRequestSigner method(String method) {
-		Validate.notEmpty(method, "method is empty");
+		AcsUtils.notEmpty(method, "method is empty");
 		this.method = method.toUpperCase();
 		return this;
 	}
 
 	public ApiRequestSigner canonicalUri(String uri) {
-		Validate.notEmpty(uri, "uri is empty");
+		AcsUtils.notEmpty(uri, "uri is empty");
 		this.uri = uri;
 		return this;
 	}
 
 	public ApiRequestSigner parameter(String name, String value) {
-		Validate.notEmpty(name, "name is empty");
+		AcsUtils.notEmpty(name, "name is empty");
 		try {
 			parameters.add(
 			        String.format("%s=%s", URLEncoder.encode(name.toLowerCase(), StandardCharsets.UTF_8.toString()),
-			                StringUtils.trimToEmpty(value)));
+			                AcsUtils.trimToEmpty(value)));
 		} catch (Exception e) {
 			throw new AcsSystemException("system error", e);
 		}
@@ -72,13 +70,13 @@ public class ApiRequestSigner extends Loggable {
 	}
 
 	public ApiRequestSigner apiKey(String apiKey) {
-		Validate.notEmpty(apiKey, "apiKey is empty");
+		AcsUtils.notEmpty(apiKey, "apiKey is empty");
 		this.apiKey = apiKey;
 		return this;
 	}
 
 	public ApiRequestSigner timestamp(String timestamp) {
-		Validate.notEmpty(timestamp, "timestamp is empty");
+		AcsUtils.notEmpty(timestamp, "timestamp is empty");
 		this.timestamp = timestamp;
 		return this;
 	}
@@ -116,9 +114,9 @@ public class ApiRequestSigner extends Loggable {
 	}
 
 	private void validateRequired() {
-		Validate.notEmpty(apiKey, "apiKey is required");
-		Validate.notEmpty(secretKey, "secretKey is required");
-		Validate.notEmpty(timestamp, "timestamp is required");
+		AcsUtils.notEmpty(apiKey, "apiKey is required");
+		AcsUtils.notEmpty(secretKey, "secretKey is required");
+		AcsUtils.notEmpty(timestamp, "timestamp is required");
 	}
 
 	private StringBuilder buildCanonicalRequest() {
@@ -126,11 +124,11 @@ public class ApiRequestSigner extends Loggable {
 		StringBuilder builder = new StringBuilder();
 
 		// append method
-		Validate.notEmpty(method, "method is empty");
+		AcsUtils.notEmpty(method, "method is empty");
 		builder.append(method).append('\n');
 
 		// append uri
-		Validate.notEmpty(uri);
+		AcsUtils.notEmpty(uri, "uri is empty");
 		builder.append(uri).append('\n');
 
 		// append parameters
