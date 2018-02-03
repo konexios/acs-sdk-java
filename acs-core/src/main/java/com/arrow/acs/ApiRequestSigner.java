@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.codec.digest.HmacAlgorithms;
 import org.apache.commons.codec.digest.HmacUtils;
 
 public class ApiRequestSigner extends Loggable {
@@ -90,7 +91,7 @@ public class ApiRequestSigner extends Loggable {
 
 		String stringToSign = builder.toString();
 		logDebug(method, "stringToSign: %s\n", stringToSign);
-		return HmacUtils.hmacSha256Hex(secretKey, stringToSign);
+		return new HmacUtils(HmacAlgorithms.HMAC_SHA_256, secretKey).hmacHex(stringToSign);
 	}
 
 	public String signV1() {
@@ -107,10 +108,11 @@ public class ApiRequestSigner extends Loggable {
 		stringToSign.append(ApiHeaders.X_ARROW_VERSION_1);
 		logDebug(method, "stringToSign: %s\n", stringToSign);
 
-		String signingKey = HmacUtils.hmacSha256Hex(ApiHeaders.X_ARROW_VERSION_1,
-		        HmacUtils.hmacSha256Hex(timestamp, HmacUtils.hmacSha256Hex(apiKey, secretKey)));
+		String signingKey = new HmacUtils(HmacAlgorithms.HMAC_SHA_256, ApiHeaders.X_ARROW_VERSION_1)
+		        .hmacHex(new HmacUtils(HmacAlgorithms.HMAC_SHA_256, timestamp)
+		                .hmacHex(new HmacUtils(HmacAlgorithms.HMAC_SHA_256, apiKey).hmacHex(secretKey)));
 
-		return HmacUtils.hmacSha256Hex(signingKey, stringToSign.toString());
+		return new HmacUtils(HmacAlgorithms.HMAC_SHA_256, signingKey).hmacHex(stringToSign.toString());
 	}
 
 	private void validateRequired() {

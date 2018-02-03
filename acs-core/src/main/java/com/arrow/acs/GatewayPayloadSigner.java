@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.codec.digest.HmacAlgorithms;
 import org.apache.commons.codec.digest.HmacUtils;
 
 public class GatewayPayloadSigner extends Loggable {
@@ -75,11 +76,11 @@ public class GatewayPayloadSigner extends Loggable {
 		stringToSign.append(PAYLOAD_SIGNATURE_VERSION_1);
 		logDebug(method, "stringToSign: %s", stringToSign);
 
-		String signingKey = HmacUtils.hmacSha256Hex(PAYLOAD_SIGNATURE_VERSION_1,
-		        HmacUtils.hmacSha256Hex(apiKey, secretKey));
+		String signingKey = new HmacUtils(HmacAlgorithms.HMAC_SHA_256, PAYLOAD_SIGNATURE_VERSION_1)
+		        .hmacHex(new HmacUtils(HmacAlgorithms.HMAC_SHA_256, apiKey).hmacHex(secretKey));
 		logDebug(method, "signingKey: %s", signingKey);
 
-		String signature = HmacUtils.hmacSha256Hex(signingKey, stringToSign.toString());
+		String signature = new HmacUtils(HmacAlgorithms.HMAC_SHA_256, signingKey).hmacHex(stringToSign.toString());
 		logDebug(method, "signature: %s", signature);
 
 		return signature;
