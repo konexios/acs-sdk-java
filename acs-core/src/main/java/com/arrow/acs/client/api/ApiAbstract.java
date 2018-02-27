@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Arrow Electronics, Inc.
+ * Copyright (c) 2018 Arrow Electronics, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License 2.0
  * which accompanies this distribution, and is available at
@@ -19,10 +19,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -35,6 +31,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 
 import com.arrow.acs.AcsErrorResponse;
+import com.arrow.acs.AcsUtils;
 import com.arrow.acs.ApiHeaders;
 import com.arrow.acs.ApiRequestSigner;
 import com.arrow.acs.JsonUtils;
@@ -71,7 +68,7 @@ public abstract class ApiAbstract extends Loggable {
 	}
 
 	public URI buildUri(String path, SearchCriteria criteria) {
-		Validate.notNull(apiConfig, "apiConfig is not set");
+		AcsUtils.notNull(apiConfig, "apiConfig is not set");
 		String baseUrl = apiConfig.getBaseUrl();
 		return buildUri(baseUrl, path, criteria);
 	}
@@ -81,15 +78,15 @@ public abstract class ApiAbstract extends Loggable {
 	}
 
 	public URI buildWebSocketUri(String path, SearchCriteria criteria) {
-		Validate.notNull(apiConfig, "apiConfig is not set");
+		AcsUtils.notNull(apiConfig, "apiConfig is not set");
 		String baseUrl = apiConfig.getBaseWebSocketUrl();
 		return buildUri(baseUrl, path, criteria);
 	}
 
 	private URI buildUri(String baseUrl, String path, SearchCriteria criteria) {
 		try {
-			URIBuilder uriBuilder = new URIBuilder(StringUtils.isBlank(baseUrl) ? "" : baseUrl);
-			if (!StringUtils.isEmpty(path)) {
+			URIBuilder uriBuilder = new URIBuilder(AcsUtils.isEmpty(baseUrl) ? "" : baseUrl);
+			if (!AcsUtils.isEmpty(path)) {
 				uriBuilder.setPath(EXTRA_SLASHES.matcher(uriBuilder.getPath() + '/' + path).replaceAll("/"));
 			}
 			if (criteria != null) {
@@ -102,68 +99,68 @@ public abstract class ApiAbstract extends Loggable {
 	}
 
 	public <T> T execute(HttpEntityEnclosingRequestBase request, String payload, Class<T> clazz) throws IOException {
-		Validate.notNull(apiConfig, "apiConfig is not set");
+		AcsUtils.notNull(apiConfig, "apiConfig is not set");
 		return JsonUtils.fromJson(execute(sign(request, payload)), clazz);
 	}
 
 	public <T> T execute(HttpEntityEnclosingRequestBase request, String payload, TypeReference<T> typeRef)
 	        throws IOException {
-		Validate.notNull(apiConfig, "apiConfig is not set");
+		AcsUtils.notNull(apiConfig, "apiConfig is not set");
 		return JsonUtils.fromJson(execute(sign(request, payload)), typeRef);
 	}
 
 	public <T> T execute(HttpRequestBase request, Class<T> clazz) throws IOException {
-		Validate.notNull(apiConfig, "apiConfig is not set");
+		AcsUtils.notNull(apiConfig, "apiConfig is not set");
 		return JsonUtils.fromJson(execute(sign(request)), clazz);
 	}
 
 	public <T> T execute(HttpRequestBase request, TypeReference<T> typeRef) throws IOException {
-		Validate.notNull(apiConfig, "apiConfig is not set");
+		AcsUtils.notNull(apiConfig, "apiConfig is not set");
 		return JsonUtils.fromJson(execute(sign(request)), typeRef);
 	}
 
 	public <T> T execute(HttpRequestBase request, SearchCriteria criteria, TypeReference<T> typeRef)
 	        throws IOException {
-		Validate.notNull(criteria, "criteria is null");
-		Validate.notNull(apiConfig, "apiConfig is not set");
+		AcsUtils.notNull(criteria, "criteria is null");
+		AcsUtils.notNull(apiConfig, "apiConfig is not set");
 		return JsonUtils.fromJson(execute(sign(request, criteria)), typeRef);
 	}
 
 	public <T> T execute(HttpRequestBase request, SearchCriteria criteria, Class<T> clazz) throws IOException {
-		Validate.notNull(criteria, "criteria is null");
-		Validate.notNull(apiConfig, "apiConfig is not set");
+		AcsUtils.notNull(criteria, "criteria is null");
+		AcsUtils.notNull(apiConfig, "apiConfig is not set");
 		return JsonUtils.fromJson(execute(sign(request, criteria)), clazz);
 	}
 
 	public long execute(HttpRequestBase request, OutputStream outputStream) throws IOException {
-		Validate.notNull(request, "request is null");
-		Validate.notNull(apiConfig, "apiConfig is not set");
+		AcsUtils.notNull(request, "request is null");
+		AcsUtils.notNull(apiConfig, "apiConfig is not set");
 		String method = "execute";
 		logInfo(method, "URI: %s", request.getURI());
 		try (CloseableHttpClient httpClient = ConnectionManager.getInstance().getConnection()) {
 			HttpResponse response = httpClient.execute(sign(request));
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode != HttpStatus.SC_OK) {
-				String content = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+				String content = AcsUtils.streamToString(response.getEntity().getContent(), StandardCharsets.UTF_8);
 				String message = String.format("error response: %d - %s, error: %s", statusCode,
 				        response.getStatusLine().getReasonPhrase(), content);
 				throw new AcsClientException(message,
 				        new AcsErrorResponse().withStatus(statusCode).withMessage(message));
 			}
-			return IOUtils.copyLarge(response.getEntity().getContent(), outputStream);
+			return AcsUtils.fastCopy(response.getEntity().getContent(), outputStream);
 		}
 	}
 
 	public DownloadFileInfo downloadFile(HttpRequestBase request) throws IOException {
-		Validate.notNull(request, "request is null");
-		Validate.notNull(apiConfig, "apiConfig is not set");
+		AcsUtils.notNull(request, "request is null");
+		AcsUtils.notNull(apiConfig, "apiConfig is not set");
 		String method = "execute";
 		logInfo(method, "url: %s", request.getURI());
 		try (CloseableHttpClient httpClient = ConnectionManager.getInstance().getConnection()) {
 			HttpResponse response = httpClient.execute(sign(request));
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode != HttpStatus.SC_OK) {
-				String content = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+				String content = AcsUtils.streamToString(response.getEntity().getContent(), StandardCharsets.UTF_8);
 				String message = String.format("error response: %d - %s, error: %s", statusCode,
 				        response.getStatusLine().getReasonPhrase(), content);
 				throw new AcsClientException(message,
@@ -188,18 +185,18 @@ public abstract class ApiAbstract extends Loggable {
 				logWarn(method, "Content-Disposition header not found!");
 			}
 			File tempFile = File.createTempFile("acs_", ".dat");
-			FileUtils.copyInputStreamToFile(response.getEntity().getContent(), tempFile);
+			AcsUtils.fastCopy(response.getEntity().getContent(), tempFile);
 			return new DownloadFileInfo().withTempFile(tempFile).withFileName(fileName).withSize(tempFile.length());
 		}
 	}
 
 	private String execute(HttpRequestBase request) throws IOException {
-		Validate.notNull(request, "request is null");
+		AcsUtils.notNull(request, "request is null");
 		String method = "execute";
 		logInfo(method, "URI: %s", request.getURI());
 		try (CloseableHttpClient httpClient = ConnectionManager.getInstance().getConnection()) {
 			HttpResponse response = httpClient.execute(request);
-			String content = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+			String content = AcsUtils.streamToString(response.getEntity().getContent(), StandardCharsets.UTF_8);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode != HttpStatus.SC_OK) {
 				logError(method, "ERROR: %s", content);
@@ -212,10 +209,10 @@ public abstract class ApiAbstract extends Loggable {
 	}
 
 	private ApiRequestSigner getSigner(HttpRequestBase request, Instant timestamp) {
-		Validate.notNull(request, "request is null");
-		Validate.notNull(timestamp, "timestamp is null");
-		Validate.notEmpty(apiConfig.getApiKey(), "apiKey is empty");
-		Validate.notEmpty(apiConfig.getSecretKey(), "secretKey is empty");
+		AcsUtils.notNull(request, "request is null");
+		AcsUtils.notNull(timestamp, "timestamp is null");
+		AcsUtils.notEmpty(apiConfig.getApiKey(), "apiKey is empty");
+		AcsUtils.notEmpty(apiConfig.getSecretKey(), "secretKey is empty");
 		return ApiRequestSigner.create(apiConfig.getSecretKey()).method(request.getMethod())
 		        .canonicalUri(request.getURI().getPath()).apiKey(apiConfig.getApiKey()).timestamp(timestamp.toString());
 	}
@@ -250,9 +247,9 @@ public abstract class ApiAbstract extends Loggable {
 	}
 
 	private void addHeaders(HttpRequestBase msg, Instant timestamp, String signature) {
-		Validate.notNull(msg, "msg is null");
-		Validate.notNull(timestamp, "timestamp is null");
-		Validate.notEmpty(apiConfig.getApiKey(), "apiKey is empty");
+		AcsUtils.notNull(msg, "msg is null");
+		AcsUtils.notNull(timestamp, "timestamp is null");
+		AcsUtils.notEmpty(apiConfig.getApiKey(), "apiKey is empty");
 		msg.addHeader(HttpHeaders.CONTENT_TYPE, MIME_APPLICATION_JSON);
 		msg.addHeader(HttpHeaders.ACCEPT, MIME_APPLICATION_JSON);
 		msg.addHeader(ApiHeaders.X_ARROW_APIKEY, apiConfig.getApiKey());

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Arrow Electronics, Inc.
+ * Copyright (c) 2018 Arrow Electronics, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License 2.0
  * which accompanies this distribution, and is available at
@@ -16,8 +16,6 @@ import java.net.URL;
 import java.util.jar.JarEntry;
 import java.util.jar.Manifest;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.loader.jar.JarFile;
 
 public class ManifestUtils {
@@ -39,13 +37,13 @@ public class ManifestUtils {
 		JarFile file = null;
 		try {
 
-			if (!StringUtils.isEmpty(jarFile)) {
+			if (!AcsUtils.isEmpty(jarFile)) {
 				String[] tokens = jarFile.split("!");
 				file = new JarFile(new File(tokens[0].trim()));
 				LOGGER.logInfo(method, "loading jar file: %s", file.getName());
 				if (tokens.length > 1) {
 					JarEntry entry = file.getJarEntry(tokens[1].substring(1));
-					IOUtils.closeQuietly(file);
+					AcsUtils.close(file);
 					file = file.getNestedJarFile(entry);
 					LOGGER.logInfo(method, "loading nested jar file: %s ", file.getName());
 					return file.getManifest();
@@ -62,8 +60,8 @@ public class ManifestUtils {
 			}
 		} catch (Throwable e) {
 		} finally {
-			IOUtils.closeQuietly(is);
-			IOUtils.closeQuietly(file);
+			AcsUtils.close(is);
+			AcsUtils.close(file);
 		}
 		LOGGER.logError(method, "manifest file not found for: %s", clazz.getName());
 		return null;

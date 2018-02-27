@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Arrow Electronics, Inc.
+ * Copyright (c) 2018 Arrow Electronics, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License 2.0
  * which accompanies this distribution, and is available at
@@ -14,8 +14,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-
+import com.arrow.acs.AcsUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class SamlAccountModel implements Serializable {
@@ -69,8 +68,7 @@ public class SamlAccountModel implements Serializable {
 	}
 
 	public boolean validate() {
-		return StringUtils.isNotEmpty(principal)
-		        && (StringUtils.isNotEmpty(firstName) || StringUtils.isNotEmpty(lastName));
+		return AcsUtils.isNotEmpty(principal) && (AcsUtils.isNotEmpty(firstName) || AcsUtils.isNotEmpty(lastName));
 	}
 
 	public List<String> getDefaultRoleHids() {

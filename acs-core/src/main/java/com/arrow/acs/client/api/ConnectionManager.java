@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Arrow Electronics, Inc.
+ * Copyright (c) 2018 Arrow Electronics, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License 2.0
  * which accompanies this distribution, and is available at
@@ -14,11 +14,11 @@ import java.io.IOException;
 
 import javax.annotation.PreDestroy;
 
-import org.apache.commons.lang3.Validate;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 
+import com.arrow.acs.AcsUtils;
 import com.arrow.acs.Loggable;
 
 public class ConnectionManager extends Loggable {
@@ -57,7 +57,7 @@ public class ConnectionManager extends Loggable {
 	}
 
 	public CloseableHttpClient getConnection() {
-		Validate.notNull(connectionManager, "connection manager is not available");
+		AcsUtils.notNull(connectionManager, "connection manager is not available");
 		return HttpClients.custom().setConnectionManager(connectionManager).setConnectionManagerShared(true).build();
 	}
 

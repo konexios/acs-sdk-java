@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Arrow Electronics, Inc.
+ * Copyright (c) 2018 Arrow Electronics, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License 2.0
  * which accompanies this distribution, and is available at
@@ -15,8 +15,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.codec.digest.HmacAlgorithms;
 import org.apache.commons.codec.digest.HmacUtils;
-import org.apache.commons.lang3.Validate;
 
 public class GatewayPayloadSigner extends Loggable {
 	public static final String PAYLOAD_SIGNATURE_VERSION_1 = "1";
@@ -32,18 +32,18 @@ public class GatewayPayloadSigner extends Loggable {
 	}
 
 	public static GatewayPayloadSigner create(String secretKey) {
-		Validate.notEmpty(secretKey, "secretKey is empty");
+		AcsUtils.notEmpty(secretKey, "secretKey is empty");
 		return new GatewayPayloadSigner(secretKey);
 	}
 
 	public GatewayPayloadSigner withHid(String hid) {
-		Validate.notEmpty(hid, "hid is empty");
+		AcsUtils.notEmpty(hid, "hid is empty");
 		this.hid = hid;
 		return this;
 	}
 
 	public GatewayPayloadSigner withName(String name) {
-		Validate.notEmpty(name, "name is empty");
+		AcsUtils.notEmpty(name, "name is empty");
 		this.name = name;
 		return this;
 	}
@@ -54,21 +54,21 @@ public class GatewayPayloadSigner extends Loggable {
 	}
 
 	public GatewayPayloadSigner withApiKey(String apiKey) {
-		Validate.notEmpty(apiKey, "apiKey is empty");
+		AcsUtils.notEmpty(apiKey, "apiKey is empty");
 		this.apiKey = apiKey;
 		return this;
 	}
 
 	public GatewayPayloadSigner withParameter(String name, String value) {
-		Validate.notEmpty(name, "name is empty");
+		AcsUtils.notEmpty(name, "name is empty");
 		parameters.add(String.format("%s=%s", name.toLowerCase(), value));
 		return this;
 	}
 
 	public String signV1() {
 		String method = "signV1";
-		Validate.notEmpty(apiKey, "apiKey is required");
-		Validate.notEmpty(secretKey, "secretKey is required");
+		AcsUtils.notEmpty(apiKey, "apiKey is required");
+		AcsUtils.notEmpty(secretKey, "secretKey is required");
 
 		StringBuilder stringToSign = new StringBuilder();
 		stringToSign.append(hash(buildCanonicalRequest())).append('\n');
@@ -76,19 +76,19 @@ public class GatewayPayloadSigner extends Loggable {
 		stringToSign.append(PAYLOAD_SIGNATURE_VERSION_1);
 		logDebug(method, "stringToSign: %s", stringToSign);
 
-		String signingKey = HmacUtils.hmacSha256Hex(PAYLOAD_SIGNATURE_VERSION_1,
-				HmacUtils.hmacSha256Hex(apiKey, secretKey));
+		String signingKey = new HmacUtils(HmacAlgorithms.HMAC_SHA_256, PAYLOAD_SIGNATURE_VERSION_1)
+		        .hmacHex(new HmacUtils(HmacAlgorithms.HMAC_SHA_256, apiKey).hmacHex(secretKey));
 		logDebug(method, "signingKey: %s", signingKey);
 
-		String signature = HmacUtils.hmacSha256Hex(signingKey, stringToSign.toString());
+		String signature = new HmacUtils(HmacAlgorithms.HMAC_SHA_256, signingKey).hmacHex(stringToSign.toString());
 		logDebug(method, "signature: %s", signature);
 
 		return signature;
 	}
 
 	private String buildCanonicalRequest() {
-		Validate.notEmpty(hid, "hid is empty");
-		Validate.notEmpty(name, "name is empty");
+		AcsUtils.notEmpty(hid, "hid is empty");
+		AcsUtils.notEmpty(name, "name is empty");
 
 		StringBuilder builder = new StringBuilder();
 		builder.append(hid).append('\n').append(name).append('\n').append(encrypted).append('\n');

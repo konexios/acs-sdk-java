@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Arrow Electronics, Inc.
+ * Copyright (c) 2018 Arrow Electronics, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License 2.0
  * which accompanies this distribution, and is available at
@@ -9,8 +9,6 @@
  *     Arrow Electronics, Inc.
  *******************************************************************************/
 package com.arrow.acs;
-
-import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -84,7 +82,7 @@ public class JsonUtils {
 	}
 
 	public static <T> T fromJson(String value, Class<T> type) {
-		if (StringUtils.isEmpty(value))
+		if (AcsUtils.isEmpty(value))
 			return null;
 		try {
 			return (T) getObjectMapper().readValue(value, type);
@@ -105,7 +103,7 @@ public class JsonUtils {
 	}
 
 	public static <T> T fromJson(String value, TypeReference<T> type) {
-		if (StringUtils.isEmpty(value))
+		if (AcsUtils.isEmpty(value))
 			return null;
 		try {
 			return getObjectMapper().readValue(value, type);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Arrow Electronics, Inc.
+ * Copyright (c) 2018 Arrow Electronics, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License 2.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.arrow.acs.client.api;
 
-import org.apache.commons.lang3.Validate;
+import com.arrow.acs.AcsUtils;
 
 public final class AcsClient {
 	private ApiConfig apiConfig;
@@ -19,7 +19,7 @@ public final class AcsClient {
 	private ClientApplicationApi applicationApi;
 
 	public AcsClient(ApiConfig apiConfig) {
-		Validate.notNull(apiConfig, "apiConfig is not set");
+		AcsUtils.notNull(apiConfig, "apiConfig is not set");
 		this.apiConfig = apiConfig;
 		this.cacheApi = new ClientCacheApi(apiConfig);
 		this.userApi = new ClientUserApi(apiConfig);
@@ -27,7 +27,7 @@ public final class AcsClient {
 	}
 
 	public void setApiConfig(ApiConfig apiConfig) {
-		Validate.notNull(apiConfig, "apiConfig is not set");
+		AcsUtils.notNull(apiConfig, "apiConfig is not set");
 		this.apiConfig = apiConfig;
 		this.cacheApi.setApiConfig(apiConfig);
 		this.userApi.setApiConfig(apiConfig);
