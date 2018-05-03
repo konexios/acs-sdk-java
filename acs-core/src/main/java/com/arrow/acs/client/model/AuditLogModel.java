@@ -16,6 +16,7 @@ import java.util.Map;
 public class AuditLogModel extends TsModelAbstract<AuditLogModel> {
 	private static final long serialVersionUID = -6713413123784260777L;
 
+	private String applicationHid; 
 	private String productName;
 	private String type;
 	private String objectHid;
@@ -23,6 +24,11 @@ public class AuditLogModel extends TsModelAbstract<AuditLogModel> {
 
 	@Override
 	protected AuditLogModel self() {
+		return this;
+	}
+
+	public AuditLogModel withParameters(Map<String, String> parameters) {
+		setParameters(parameters);
 		return this;
 	}
 
@@ -36,6 +42,11 @@ public class AuditLogModel extends TsModelAbstract<AuditLogModel> {
 		return this;
 	}
 
+	public AuditLogModel withApplicationHid(String applicationHid) {
+		setApplicationHid(applicationHid);
+		return this;
+	}
+	
 	public AuditLogModel withObjectHid(String objectHid) {
 		setObjectHid(objectHid);
 		return this;
@@ -71,5 +82,13 @@ public class AuditLogModel extends TsModelAbstract<AuditLogModel> {
 
 	public void setParameters(Map<String, String> parameters) {
 		this.parameters = parameters;
+	}
+
+	public String getApplicationHid() {
+		return applicationHid;
+	}
+
+	public void setApplicationHid(String applicationHid) {
+		this.applicationHid = applicationHid;
 	}
 }

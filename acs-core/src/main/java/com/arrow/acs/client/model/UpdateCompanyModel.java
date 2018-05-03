@@ -23,4 +23,9 @@ public class UpdateCompanyModel extends CreateCompanyModel {
 	public void setHid(String hid) {
 		this.hid = hid;
 	}
+	
+	public UpdateCompanyModel withHid(String hid) {
+		setHid(hid);
+		return this;
+	}
 }

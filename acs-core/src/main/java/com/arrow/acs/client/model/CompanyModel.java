@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.arrow.acs.client.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class CompanyModel extends AuditableDocumentModelAbstract<CompanyModel> {
 	private static final long serialVersionUID = -1173608869956123803L;
 
@@ -23,6 +26,7 @@ public class CompanyModel extends AuditableDocumentModelAbstract<CompanyModel> {
 	private PasswordPolicyModel passwordPolicy;
 	private LoginPolicyModel loginPolicy;
 	private String parentCompanyHid;
+	private Set<String>   impersonateUsers = new HashSet<>();;
 
 	@Override
 	protected CompanyModel self() {
@@ -49,8 +53,8 @@ public class CompanyModel extends AuditableDocumentModelAbstract<CompanyModel> {
 		return this;
 	}
 
-	public CompanyModel withBillingAddress(AddressModel address) {
-		setBillingAddress(address);
+	public CompanyModel withBillingAddress(AddressModel billingAddress) {
+		setBillingAddress(billingAddress);
 		return this;
 	}
 
@@ -59,8 +63,8 @@ public class CompanyModel extends AuditableDocumentModelAbstract<CompanyModel> {
 		return this;
 	}
 
-	public CompanyModel withBillingContact(ContactModel contact) {
-		setBillingContact(contact);
+	public CompanyModel withBillingContact(ContactModel billingContact) {
+		setBillingContact(billingContact);
 		return this;
 	}
 
@@ -76,6 +80,11 @@ public class CompanyModel extends AuditableDocumentModelAbstract<CompanyModel> {
 
 	public CompanyModel withParentCompanyHid(String parentCompanyHid) {
 		setParentCompanyHid(parentCompanyHid);
+		return this;
+	}
+	
+	public CompanyModel withImpersonateUsers(Set<String> impersonateUsers) {
+		setImpersonateUsers(impersonateUsers);
 		return this;
 	}
 
@@ -150,6 +159,16 @@ public class CompanyModel extends AuditableDocumentModelAbstract<CompanyModel> {
 	public void setLoginPolicy(LoginPolicyModel loginPolicy) {
 		this.loginPolicy = loginPolicy;
 	}
+
+	public Set<String> getImpersonateUsers() {
+		return impersonateUsers;
+	}
+
+
+	public void setImpersonateUsers(Set<String> impersonateUsers) {
+		this.impersonateUsers = impersonateUsers;
+	}
+
 
 	public String getParentCompanyHid() {
 		return parentCompanyHid;

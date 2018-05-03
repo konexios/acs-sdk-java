@@ -69,6 +69,20 @@ public class UcmaModel implements Serializable {
 		return this;
 	}
 
+	public UcmaModel withImpersonateDomain(String impersonateDomain) {
+		setImpersonateDomain(impersonateDomain);
+		return this;
+	}
+	
+	public UcmaModel withSubject(String subject) {
+		setSubject(subject);
+		return this;
+	}
+	public UcmaModel withToastMessage(String toastMessage) {
+		setToastMessage(toastMessage);
+		return this;
+	}
+	
 	public String getApplicationEndpointSip() {
 		return applicationEndpointSip;
 	}

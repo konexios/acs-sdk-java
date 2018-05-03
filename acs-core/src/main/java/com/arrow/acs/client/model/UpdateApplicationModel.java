@@ -23,4 +23,9 @@ public class UpdateApplicationModel extends CreateApplicationModel {
 	public void setHid(String hid) {
 		this.hid = hid;
 	}
+	
+	public UpdateApplicationModel withHid(String hid) {
+		setHid(hid);
+		return this;
+	}
 }

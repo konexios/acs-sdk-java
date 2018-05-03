@@ -48,8 +48,13 @@ public class SubscriptionModel extends DefinitionModelAbstract<SubscriptionModel
 		return this;
 	}
 
-	public SubscriptionModel withBillingContact(ContactModel contact) {
-		setBillingContact(contact);
+	public SubscriptionModel withBillingContact(ContactModel billingContact) {
+		setBillingContact(billingContact);
+		return this;
+	}
+	
+	public SubscriptionModel withRefCompany(CompanyModel refCompany) {
+		setRefCompany(refCompany);
 		return this;
 	}
 

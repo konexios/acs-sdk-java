@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.arrow.acs.client.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ProductModel extends DefinitionModelAbstract<ProductModel> {
@@ -18,6 +21,7 @@ public class ProductModel extends DefinitionModelAbstract<ProductModel> {
 	private String systemName;
 	private boolean apiSigningRequired;
 	private String parentProductHid;
+	private List<ProductFeatureModel> features= new ArrayList<>();
 
 	@JsonIgnore
 	private ProductModel refParentProduct;
@@ -39,6 +43,16 @@ public class ProductModel extends DefinitionModelAbstract<ProductModel> {
 
 	public ProductModel withParentProductHid(String parentProductHid) {
 		setParentProductHid(parentProductHid);
+		return this;
+	}
+	
+	public ProductModel withFeatures(List<ProductFeatureModel> features) {
+		setFeatures(features);
+		return this;
+	}
+	
+	public ProductModel withRefParentProduct(ProductModel refParentProduct) {
+		setRefParentProduct(refParentProduct);
 		return this;
 	}
 
@@ -72,5 +86,13 @@ public class ProductModel extends DefinitionModelAbstract<ProductModel> {
 
 	public ProductModel getRefParentProduct() {
 		return refParentProduct;
+	}
+
+	public List<ProductFeatureModel> getFeatures() {
+		return features;
+	}
+
+	public void setFeatures(List<ProductFeatureModel> features) {
+		this.features = features;
 	}
 }

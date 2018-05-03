@@ -53,6 +53,11 @@ public class SamlAccountModel implements Serializable {
 		setEnabled(enabled);
 		return this;
 	}
+	
+	public SamlAccountModel withRefRoles(List<RoleModel> refRoles) {
+		setRefRoles(refRoles);
+		return this;
+	}
 
 	public SamlAccountModel withDefaultRoleHids(List<String> defaultRoleHids) {
 		setDefaultRoleHids(defaultRoleHids);

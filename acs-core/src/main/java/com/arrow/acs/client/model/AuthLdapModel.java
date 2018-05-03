@@ -27,12 +27,22 @@ public class AuthLdapModel implements Serializable {
 		this.domain = domain;
 	}
 
+	public AuthLdapModel withDomain(String domain) {
+		setDomain(domain);
+		return this;
+	}
+	
 	public String getApplicationHid() {
 		return applicationHid;
 	}
 
 	public void setApplicationHid(String applicationHid) {
 		this.applicationHid = applicationHid;
+	}
+	
+	public AuthLdapModel withApplicationHid(String applicationHid) {
+		setApplicationHid(applicationHid);
+		return this;
 	}
 
 	public String getUrl() {
@@ -41,6 +51,11 @@ public class AuthLdapModel implements Serializable {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+	
+	public AuthLdapModel withUrl(String url) {
+		setUrl(url);
+		return this;
 	}
 
 	@Override

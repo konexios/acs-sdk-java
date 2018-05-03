@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.arrow.acs.client.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ApplicationModel extends DefinitionModelAbstract<ApplicationModel> {
@@ -23,6 +26,9 @@ public class ApplicationModel extends DefinitionModelAbstract<ApplicationModel> 
 	private String code;
 	private String zoneSystemName;
 	private String zoneHid;
+	private List<String> productExtensionHids  = new ArrayList<>();
+	private List<String> productFeatures = new ArrayList<>();
+	
 	@JsonIgnore
 	private CompanyModel refCompany;
 	@JsonIgnore
@@ -67,6 +73,31 @@ public class ApplicationModel extends DefinitionModelAbstract<ApplicationModel> 
 	
 	public ApplicationModel withZoneSystemName(String zoneSystemName) {
 		setZoneSystemName(zoneSystemName);
+		return this;
+	}
+	
+	public ApplicationModel withProductExtensionHids(List<String> productExtensionHids) {
+		setProductExtensionHids(productExtensionHids);
+		return this;
+	}
+	
+	public ApplicationModel withProductFeatures(List<String> productFeatures) {
+		setProductFeatures(productFeatures);
+		return this;
+	}
+	
+	public ApplicationModel withRefCompany(CompanyModel refCompany) {
+		setRefCompany(refCompany);
+		return this;
+	}
+	
+	public ApplicationModel withRefProduct(ProductModel refProduct) {
+		setRefProduct(refProduct);
+		return this;
+	}
+	
+	public ApplicationModel withRefSubscription(SubscriptionModel refSubscription) {
+		setRefSubscription(refSubscription);
 		return this;
 	}
 
@@ -161,5 +192,21 @@ public class ApplicationModel extends DefinitionModelAbstract<ApplicationModel> 
 
 	public void setZoneHid(String zoneHid) {
 		this.zoneHid = zoneHid;
+	}
+	
+	public List<String> getProductExtensionHids() {
+		return productExtensionHids;
+	}
+
+	public void setProductExtensionHids(List<String> productExtensionHids) {
+		this.productExtensionHids = productExtensionHids;
+	}
+
+	public List<String> getProductFeatures() {
+		return productFeatures;
+	}
+
+	public void setProductFeatures(List<String> productFeatures) {
+		this.productFeatures = productFeatures;
 	}
 }

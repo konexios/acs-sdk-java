@@ -33,12 +33,22 @@ public class CreateSubscriptionModel implements Serializable {
 		this.companyHid = companyHid;
 	}
 
+	public CreateSubscriptionModel withCompanyHid(String companyHid) {
+		setCompanyHid(companyHid);
+		return this;
+	}
+	
 	public String getStartDate() {
 		return startDate;
 	}
 
 	public void setStartDate(String startDate) {
 		this.startDate = startDate;
+	}
+	
+	public CreateSubscriptionModel withStartDate(String startDate) {
+		setStartDate(startDate);
+		return this;
 	}
 
 	public String getEndDate() {
@@ -48,6 +58,11 @@ public class CreateSubscriptionModel implements Serializable {
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
+	
+	public CreateSubscriptionModel withEndDate(String endDate) {
+		setEndDate(endDate);
+		return this;
+	}
 
 	public ContactModel getContact() {
 		return contact;
@@ -55,6 +70,11 @@ public class CreateSubscriptionModel implements Serializable {
 
 	public void setContact(ContactModel contact) {
 		this.contact = contact;
+	}
+	
+	public CreateSubscriptionModel withContact(ContactModel contact) {
+		setContact(contact);
+		return this;
 	}
 
 	public ContactModel getBillingContact() {
@@ -65,12 +85,22 @@ public class CreateSubscriptionModel implements Serializable {
 		this.billingContact = billingContact;
 	}
 
+	public CreateSubscriptionModel withBillingContact(ContactModel billingContact) {
+		setBillingContact(billingContact);
+		return this;
+	}
+	
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public CreateSubscriptionModel withName(String name) {
+		setName(name);
+		return this;
 	}
 
 	public String getDescription() {
@@ -80,6 +110,11 @@ public class CreateSubscriptionModel implements Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
+	public CreateSubscriptionModel withDescription(String description) {
+		setDescription(description);
+		return this;
+	}
 
 	public boolean isEnabled() {
 		return enabled;
@@ -87,5 +122,10 @@ public class CreateSubscriptionModel implements Serializable {
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+	
+	public CreateSubscriptionModel withEnabled(boolean enabled) {
+		setEnabled(enabled);
+		return this;
 	}
 }

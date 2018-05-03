@@ -23,4 +23,9 @@ public class UpdateSubscriptionModel extends CreateSubscriptionModel {
 	public void setHid(String hid) {
 		this.hid = hid;
 	}
+	
+	public UpdateSubscriptionModel withHid(String hid) {
+		setHid(hid);
+		return this;
+	}
 }

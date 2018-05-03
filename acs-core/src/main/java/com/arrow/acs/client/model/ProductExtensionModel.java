@@ -27,4 +27,9 @@ public class ProductExtensionModel extends AuditableDocumentModelAbstract<Produc
 	public void setProductHid(String productHid) {
 		this.productHid = productHid;
 	}
+	
+	public ProductExtensionModel withProductHid(String productHid) {
+		setProductHid(productHid);
+		return this;
+	}
 }
