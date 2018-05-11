@@ -11,7 +11,6 @@
 package com.arrow.acs.client.model;
 
 import java.io.Serializable;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CloudRequestModel implements Serializable {
@@ -20,7 +19,7 @@ public class CloudRequestModel implements Serializable {
 	private String requestId;
 	private String eventName;
 	private boolean encrypted;
-	private Map<String, String> parameters = new LinkedHashMap<>();
+	private Map<String, String> parameters;
 	private String signature;
 	private String signatureVersion;
 
