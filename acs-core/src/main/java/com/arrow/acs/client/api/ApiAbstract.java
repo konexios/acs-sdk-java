@@ -17,6 +17,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import org.apache.http.Header;
@@ -34,9 +35,14 @@ import com.arrow.acs.AcsErrorResponse;
 import com.arrow.acs.AcsUtils;
 import com.arrow.acs.ApiHeaders;
 import com.arrow.acs.ApiRequestSigner;
+import com.arrow.acs.GatewayPayloadSigner;
 import com.arrow.acs.JsonUtils;
 import com.arrow.acs.Loggable;
 import com.arrow.acs.client.AcsClientException;
+import com.arrow.acs.client.model.CloudMqttRequestParams;
+import com.arrow.acs.client.model.CloudRequestMethodName;
+import com.arrow.acs.client.model.CloudRequestModel;
+import com.arrow.acs.client.model.CloudRequestParameters;
 import com.arrow.acs.client.model.DownloadFileInfo;
 import com.arrow.acs.client.model.ExternalHidModel;
 import com.arrow.acs.client.model.HidModel;
@@ -104,7 +110,7 @@ public abstract class ApiAbstract extends Loggable {
 	}
 
 	public <T> T execute(HttpEntityEnclosingRequestBase request, String payload, TypeReference<T> typeRef)
-	        throws IOException {
+			throws IOException {
 		AcsUtils.notNull(apiConfig, "apiConfig is not set");
 		return JsonUtils.fromJson(execute(sign(request, payload)), typeRef);
 	}
@@ -120,7 +126,7 @@ public abstract class ApiAbstract extends Loggable {
 	}
 
 	public <T> T execute(HttpRequestBase request, SearchCriteria criteria, TypeReference<T> typeRef)
-	        throws IOException {
+			throws IOException {
 		AcsUtils.notNull(criteria, "criteria is null");
 		AcsUtils.notNull(apiConfig, "apiConfig is not set");
 		return JsonUtils.fromJson(execute(sign(request, criteria)), typeRef);
@@ -143,9 +149,9 @@ public abstract class ApiAbstract extends Loggable {
 			if (statusCode != HttpStatus.SC_OK) {
 				String content = AcsUtils.streamToString(response.getEntity().getContent(), StandardCharsets.UTF_8);
 				String message = String.format("error response: %d - %s, error: %s", statusCode,
-				        response.getStatusLine().getReasonPhrase(), content);
+						response.getStatusLine().getReasonPhrase(), content);
 				throw new AcsClientException(message,
-				        new AcsErrorResponse().withStatus(statusCode).withMessage(message));
+						new AcsErrorResponse().withStatus(statusCode).withMessage(message));
 			}
 			return AcsUtils.fastCopy(response.getEntity().getContent(), outputStream);
 		}
@@ -162,9 +168,9 @@ public abstract class ApiAbstract extends Loggable {
 			if (statusCode != HttpStatus.SC_OK) {
 				String content = AcsUtils.streamToString(response.getEntity().getContent(), StandardCharsets.UTF_8);
 				String message = String.format("error response: %d - %s, error: %s", statusCode,
-				        response.getStatusLine().getReasonPhrase(), content);
+						response.getStatusLine().getReasonPhrase(), content);
 				throw new AcsClientException(message,
-				        new AcsErrorResponse().withStatus(statusCode).withMessage(message));
+						new AcsErrorResponse().withStatus(statusCode).withMessage(message));
 			}
 			String fileName = null;
 			Header contentDispositionHeader = response.getFirstHeader("Content-Disposition");
@@ -201,7 +207,7 @@ public abstract class ApiAbstract extends Loggable {
 			if (statusCode != HttpStatus.SC_OK) {
 				logError(method, "ERROR: %s", content);
 				String message = String.format("error response: %d - %s, error: %s", statusCode,
-				        response.getStatusLine().getReasonPhrase(), content);
+						response.getStatusLine().getReasonPhrase(), content);
 				throw new AcsClientException(message, JsonUtils.fromJson(content, AcsErrorResponse.class));
 			}
 			return content;
@@ -214,7 +220,7 @@ public abstract class ApiAbstract extends Loggable {
 		AcsUtils.notEmpty(apiConfig.getApiKey(), "apiKey is empty");
 		AcsUtils.notEmpty(apiConfig.getSecretKey(), "secretKey is empty");
 		return ApiRequestSigner.create(apiConfig.getSecretKey()).method(request.getMethod())
-		        .canonicalUri(request.getURI().getPath()).apiKey(apiConfig.getApiKey()).timestamp(timestamp.toString());
+				.canonicalUri(request.getURI().getPath()).apiKey(apiConfig.getApiKey()).timestamp(timestamp.toString());
 	}
 
 	private HttpRequestBase sign(HttpRequestBase request) {
@@ -268,7 +274,7 @@ public abstract class ApiAbstract extends Loggable {
 
 	protected void log(String method, ExternalHidModel model) {
 		logDebug(method, "hid: %s, externalId: %s, message: %s", model.getHid(), model.getExternalId(),
-		        model.getMessage());
+				model.getMessage());
 	}
 
 	protected void log(String method, StatusModel model) {
@@ -281,12 +287,12 @@ public abstract class ApiAbstract extends Loggable {
 
 	protected void log(String method, PagingResultModel<?> model) {
 		logDebug(method, "size: %d, totalSize: %d, page: %d, totalPage: %d", model.getSize(), model.getTotalSize(),
-		        model.getPage(), model.getTotalPages());
+				model.getPage(), model.getTotalPages());
 	}
 
 	protected void log(String method, DownloadFileInfo model) {
 		logDebug(method, "tempFile: %s, fileName: %s, size: %d", model.getTempFile().getAbsolutePath(),
-		        model.getFileName(), model.getSize());
+				model.getFileName(), model.getSize());
 	}
 
 	protected AcsClientException handleException(Throwable t) {
