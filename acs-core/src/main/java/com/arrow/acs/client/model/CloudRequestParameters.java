@@ -15,7 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CloudRequestParameters implements Serializable {
-	private static final long serialVersionUID = -2639511479743061849L;
+	private static final long serialVersionUID = -2250244763023086384L;
 
 	public static final String URI_PARAMETER_NAME = "uri";
 	public static final String METHOD_PARAMETER_NAME = "method";
@@ -32,6 +32,41 @@ public class CloudRequestParameters implements Serializable {
 	private String apiRequestSignature;
 	private String apiRequestSignatureVersion;
 	private String timestamp;
+
+	public CloudRequestParameters withUri(String uri) {
+		setUri(uri);
+		return this;
+	}
+
+	public CloudRequestParameters withMethod(CloudRequestMethodName method) {
+		setMethod(method);
+		return this;
+	}
+
+	public CloudRequestParameters withApiKey(String apiKey) {
+		setApiKey(apiKey);
+		return this;
+	}
+
+	public CloudRequestParameters withBody(String body) {
+		setBody(body);
+		return this;
+	}
+
+	public CloudRequestParameters withApiRequestSignature(String apiRequestSignature) {
+		setApiRequestSignature(apiRequestSignature);
+		return this;
+	}
+
+	public CloudRequestParameters withApiRequestSignatureVersion(String apiRequestSignatureVersion) {
+		setApiRequestSignatureVersion(apiRequestSignatureVersion);
+		return this;
+	}
+
+	public CloudRequestParameters withTimestamp(String timestamp) {
+		setTimestamp(timestamp);
+		return this;
+	}
 
 	public String getUri() {
 		return uri;
@@ -96,7 +131,6 @@ public class CloudRequestParameters implements Serializable {
 			parameters.put(URI_PARAMETER_NAME, getUri());
 		}
 		if (getMethod() != null) {
-			// TODO verify result of String.valueOf here
 			parameters.put(METHOD_PARAMETER_NAME, String.valueOf(getMethod()));
 		}
 		if (getApiKey() != null) {
