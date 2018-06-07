@@ -23,6 +23,11 @@ public class UserAppAuthenticationModel extends UserAuthenticationModel {
 	public void setApplicationCode(String applicationCode) {
 		this.applicationCode = applicationCode;
 	}
+	
+	public UserAppAuthenticationModel withApplicationCode(String applicationCode) {
+		setApplicationCode(applicationCode);
+		return this;
+	}
 
 	@Override
 	public int hashCode() {

@@ -39,6 +39,11 @@ public class CreateApplicationModel implements Serializable {
 	public void setZoneHid(String zoneHid) {
 		this.zoneHid = zoneHid;
 	}
+	
+	public CreateApplicationModel withZoneHid(String zoneHid) {
+		setZoneHid(zoneHid);
+		return this;
+	}
 
 	public String getCompanyHid() {
 		return companyHid;
@@ -48,12 +53,22 @@ public class CreateApplicationModel implements Serializable {
 		this.companyHid = companyHid;
 	}
 
+	public CreateApplicationModel withCompanyHid(String companyHid) {
+		setCompanyHid(companyHid);
+		return this;
+	}
+	
 	public String getSubscriptionHid() {
 		return subscriptionHid;
 	}
 
 	public void setSubscriptionHid(String subscriptionHid) {
 		this.subscriptionHid = subscriptionHid;
+	}
+	
+	public CreateApplicationModel withSubscriptionHid(String subscriptionHid) {
+		setSubscriptionHid(subscriptionHid);
+		return this;
 	}
 
 	public String getProductHid() {
@@ -64,12 +79,22 @@ public class CreateApplicationModel implements Serializable {
 		this.productHid = productHid;
 	}
 
+	public CreateApplicationModel withProductHid(String productHid) {
+		setProductHid(productHid);
+		return this;
+	}
+	
 	public YesNoInherit getApiSigningRequired() {
 		return apiSigningRequired;
 	}
 
 	public void setApiSigningRequired(YesNoInherit apiSigningRequired) {
 		this.apiSigningRequired = apiSigningRequired;
+	}
+	
+	public CreateApplicationModel withApiSigningRequired(YesNoInherit apiSigningRequired) {
+		setApiSigningRequired(apiSigningRequired);
+		return this;
 	}
 
 	public String getApplicationEngineHid() {
@@ -79,6 +104,11 @@ public class CreateApplicationModel implements Serializable {
 	public void setApplicationEngineHid(String applicationEngineHid) {
 		this.applicationEngineHid = applicationEngineHid;
 	}
+	
+	public CreateApplicationModel withApplicationEngineHid(String applicationEngineHid) {
+		setApplicationEngineHid(applicationEngineHid);
+		return this;
+	}
 
 	public String getDefaultSamlEntityId() {
 		return defaultSamlEntityId;
@@ -86,6 +116,11 @@ public class CreateApplicationModel implements Serializable {
 
 	public void setDefaultSamlEntityId(String defaultSamlEntityId) {
 		this.defaultSamlEntityId = defaultSamlEntityId;
+	}
+	
+	public CreateApplicationModel withDefaultSamlEntityId(String defaultSamlEntityId) {
+		setDefaultSamlEntityId(defaultSamlEntityId);
+		return this;
 	}
 
 	public String getCode() {
@@ -95,6 +130,11 @@ public class CreateApplicationModel implements Serializable {
 	public void setCode(String code) {
 		this.code = code;
 	}
+	
+	public CreateApplicationModel withCode(String code) {
+		setCode(code);
+		return this;
+	}
 
 	public List<ConfigurationPropertyModel> getConfigurations() {
 		return configurations;
@@ -102,6 +142,11 @@ public class CreateApplicationModel implements Serializable {
 
 	public void setConfigurations(List<ConfigurationPropertyModel> configurations) {
 		this.configurations = configurations;
+	}
+	
+	public CreateApplicationModel withConfigurations(List<ConfigurationPropertyModel> configurations) {
+		setConfigurations(configurations);
+		return this;
 	}
 
 	public List<String> getProductExtensionHids() {
@@ -112,6 +157,11 @@ public class CreateApplicationModel implements Serializable {
 		this.productExtensionHids = productExtensionHids;
 	}
 
+	public CreateApplicationModel withProductExtensionHids(List<String> productExtensionHids) {
+		setProductExtensionHids(productExtensionHids);
+		return this;
+	}
+	
 	public String getDescription() {
 		return description;
 	}
@@ -120,6 +170,11 @@ public class CreateApplicationModel implements Serializable {
 		this.description = description;
 	}
 
+	public CreateApplicationModel withDescription(String description) {
+		setDescription(description);
+		return this;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -128,11 +183,21 @@ public class CreateApplicationModel implements Serializable {
 		this.name = name;
 	}
 
+	public CreateApplicationModel withName(String name) {
+		setName(name);
+		return this;
+	}
+	
 	public boolean isEnabled() {
 		return enabled;
 	}
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+	
+	public CreateApplicationModel withEnabled(boolean enabled) {
+		setEnabled(enabled);
+		return this;
 	}
 }

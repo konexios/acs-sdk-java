@@ -10,26 +10,37 @@
  *******************************************************************************/
 package com.arrow.acs.client.model;
 
-public class ProductExtensionModel extends AuditableDocumentModelAbstract<ProductExtensionModel> {
-	private static final long serialVersionUID = -8531276228194317252L;
+import java.io.Serializable;
 
-	private String productHid;
+public class AccessPrivilegeModel implements Serializable {
+	private static final long serialVersionUID = 8938016265302233038L;
+	
+	private String pri;
+    private AccessLevel level;
 
-	@Override
-	protected ProductExtensionModel self() {
+	public String getPri() {
+		return pri;
+	}
+
+	public void setPri(String pri) {
+		this.pri = pri;
+	}
+	
+	public AccessPrivilegeModel withPri(String pri){
+		setPri(pri);
 		return this;
 	}
 
-	public String getProductHid() {
-		return productHid;
+	public AccessLevel getLevel() {
+		return level;
 	}
 
-	public void setProductHid(String productHid) {
-		this.productHid = productHid;
+	public void setLevel(AccessLevel level) {
+		this.level = level;
 	}
 	
-	public ProductExtensionModel withProductHid(String productHid) {
-		setProductHid(productHid);
+	public AccessPrivilegeModel withLevel(AccessLevel level){
+		setLevel(level);
 		return this;
 	}
 }

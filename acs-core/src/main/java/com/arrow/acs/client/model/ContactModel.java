@@ -13,7 +13,7 @@ package com.arrow.acs.client.model;
 import java.io.Serializable;
 
 public class ContactModel implements Serializable {
-	private static final long serialVersionUID = 3006465996184026763L;
+	private static final long serialVersionUID = 2625894338786294894L;
 
 	private String firstName;
 	private String lastName;
@@ -24,6 +24,7 @@ public class ContactModel implements Serializable {
 	private String cell;
 	private String fax;
 	private String monitorExt;
+	private String  middleName; 
 
 	public ContactModel withFirstName(String firstName) {
 		setFirstName(firstName);
@@ -62,6 +63,16 @@ public class ContactModel implements Serializable {
 
 	public ContactModel withMonitorExt(String monitorExt) {
 		setMonitorExt(monitorExt);
+		return this;
+	}
+	
+	public ContactModel withFax(String fax) {
+		setFax(fax);
+		return this;
+	}
+	
+	public ContactModel withMiddleName(String middleName) {
+		setMiddleName(middleName);
 		return this;
 	}
 
@@ -139,6 +150,14 @@ public class ContactModel implements Serializable {
 
 	public void setFax(String fax) {
 		this.fax = fax;
+	}
+
+	public String getMiddleName() {
+		return middleName;
+	}
+
+	public void setMiddleName(String middleName) {
+		this.middleName = middleName;
 	}
 
 	@Override

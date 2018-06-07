@@ -28,6 +28,11 @@ public class AuthSamlModel implements Serializable {
 		this.idp = idp;
 	}
 
+	public AuthSamlModel withIdp(String idp) {
+		setIdp(idp);
+		return this;
+	}
+	
 	public String getFirstNameAttr() {
 		return firstNameAttr;
 	}
@@ -36,6 +41,11 @@ public class AuthSamlModel implements Serializable {
 		this.firstNameAttr = firstNameAttr;
 	}
 
+	public AuthSamlModel withFirstNameAttr(String firstNameAttr) {
+		setFirstNameAttr(firstNameAttr);
+		return this;
+	}
+	
 	public String getLastNameAttr() {
 		return lastNameAttr;
 	}
@@ -44,6 +54,11 @@ public class AuthSamlModel implements Serializable {
 		this.lastNameAttr = lastNameAttr;
 	}
 
+	public AuthSamlModel withLastNameAttr(String lastNameAttr) {
+		setLastNameAttr(lastNameAttr);
+		return this;
+	}
+	
 	public String getEmailAttr() {
 		return emailAttr;
 	}
@@ -52,6 +67,11 @@ public class AuthSamlModel implements Serializable {
 		this.emailAttr = emailAttr;
 	}
 
+	public AuthSamlModel withEmailAttr(String emailAttr) {
+		setEmailAttr(emailAttr);
+		return this;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

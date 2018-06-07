@@ -10,14 +10,18 @@
  *******************************************************************************/
 package com.arrow.acs.client.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ProductModel extends DefinitionModelAbstract<ProductModel> {
-	private static final long serialVersionUID = 1078834605777348220L;
+	private static final long serialVersionUID = 1614384818434220809L;
 
 	private String systemName;
 	private boolean apiSigningRequired;
 	private String parentProductHid;
+	private List<ProductFeature> features = new ArrayList<>();
 
 	@JsonIgnore
 	private ProductModel refParentProduct;
@@ -39,6 +43,16 @@ public class ProductModel extends DefinitionModelAbstract<ProductModel> {
 
 	public ProductModel withParentProductHid(String parentProductHid) {
 		setParentProductHid(parentProductHid);
+		return this;
+	}
+	
+	public ProductModel withFeatures(List<ProductFeature> features) {
+		setFeatures(features);
+		return this;
+	}
+	
+	public ProductModel withRefParentProduct(ProductModel refParentProduct) {
+		setRefParentProduct(refParentProduct);
 		return this;
 	}
 
@@ -72,5 +86,13 @@ public class ProductModel extends DefinitionModelAbstract<ProductModel> {
 
 	public ProductModel getRefParentProduct() {
 		return refParentProduct;
+	}
+
+	public List<ProductFeature> getFeatures() {
+		return features;
+	}
+
+	public void setFeatures(List<ProductFeature> features) {
+		this.features = features;
 	}
 }

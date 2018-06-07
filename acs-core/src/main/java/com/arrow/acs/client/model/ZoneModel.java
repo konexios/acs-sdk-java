@@ -58,4 +58,9 @@ public class ZoneModel extends DefinitionModelAbstract<ZoneModel> {
 	public RegionModel getRefRegion() {
 		return refRegion;
 	}
+	
+	public ZoneModel withRefRegion(RegionModel refRegion) {
+		setRefRegion(refRegion);
+		return this;
+	}
 }

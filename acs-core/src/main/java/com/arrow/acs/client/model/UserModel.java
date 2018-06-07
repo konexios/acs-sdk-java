@@ -16,13 +16,15 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class UserModel extends AuditableDocumentModelAbstract<UserModel> {
-	private static final long serialVersionUID = -3099948569824181477L;
+	private static final long serialVersionUID = -6984911480132862179L;
 
 	private String login;
 	private UserStatus status;
 	private String companyHid;
 	private ContactModel contact;
 	private AddressModel address;
+	private Long accountLockTimeout;
+	private List<UserAuthModel> auths = new ArrayList<>();
 	private List<String> roleHids = new ArrayList<>();
 	@JsonIgnore
 	private List<RoleModel> refRoles = new ArrayList<>();
@@ -59,6 +61,21 @@ public class UserModel extends AuditableDocumentModelAbstract<UserModel> {
 
 	public UserModel withRoleHids(List<String> roleHids) {
 		setRoleHids(roleHids);
+		return this;
+	}
+	
+	public UserModel withAccountLockTimeout(Long accountLockTimeout) {
+		setAccountLockTimeout(accountLockTimeout);
+		return this;
+	}
+	
+	public UserModel withAuths(List<UserAuthModel> auths) {
+		setAuths(auths);
+		return this;
+	}
+	
+	public UserModel withRefRoles(List<RoleModel> refRoles) {
+		setRefRoles(refRoles);
 		return this;
 	}
 
@@ -116,5 +133,21 @@ public class UserModel extends AuditableDocumentModelAbstract<UserModel> {
 
 	public void setStatus(UserStatus status) {
 		this.status = status;
+	}
+
+	public Long getAccountLockTimeout() {
+		return accountLockTimeout;
+	}
+
+	public void setAccountLockTimeout(Long accountLockTimeout) {
+		this.accountLockTimeout = accountLockTimeout;
+	}
+
+	public List<UserAuthModel> getAuths() {
+		return auths;
+	}
+
+	public void setAuths(List<UserAuthModel> auths) {
+		this.auths = auths;
 	}
 }

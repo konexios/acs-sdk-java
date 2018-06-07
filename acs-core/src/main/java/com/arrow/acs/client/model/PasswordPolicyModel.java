@@ -25,7 +25,7 @@ public class PasswordPolicyModel implements Serializable {
 	private boolean allowWhitespace;
 
 	public PasswordPolicyModel withMinLength(int minLength) {
-		setMinDigit(minLength);
+		setMinLength(minLength);
 		return this;
 	}
 

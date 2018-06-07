@@ -45,17 +45,32 @@ public class RoleModel extends DefinitionModelAbstract<RoleModel> {
 	public ProductModel getRefProduct() {
 		return refProduct;
 	}
-
+	
+	public RoleModel withRefProduct(ProductModel refProduct) {
+		setRefProduct(refProduct);
+		return this;
+	}
+	
 	public void setRefApplication(ApplicationModel refApplication) {
 		this.refApplication = refApplication;
 	}
 
+	public RoleModel withRefApplication(ApplicationModel refApplication) {
+		setRefApplication(refApplication);
+		return this;
+	}
+	
 	public ApplicationModel getRefApplication() {
 		return refApplication;
 	}
 
 	public void setRefPrivileges(List<PrivilegeModel> refPrivileges) {
 		this.refPrivileges = refPrivileges;
+	}
+	
+	public RoleModel withRefPrivileges(List<PrivilegeModel> refPrivileges) {
+		setRefPrivileges(refPrivileges);
+		return this;
 	}
 
 	public RoleModel withProductHid(String productHid) {
@@ -70,6 +85,11 @@ public class RoleModel extends DefinitionModelAbstract<RoleModel> {
 
 	public RoleModel withEditable(boolean editable) {
 		setEditable(editable);
+		return this;
+	}
+
+	public RoleModel withPrivilegeHids(List<String> privilegeHids) {
+		setPrivilegeHids(privilegeHids);
 		return this;
 	}
 

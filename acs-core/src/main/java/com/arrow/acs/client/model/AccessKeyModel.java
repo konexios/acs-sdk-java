@@ -9,46 +9,118 @@
  *     Arrow Electronics, Inc.
  *******************************************************************************/
 package com.arrow.acs.client.model;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.io.Serializable;
-
-public class AccessKeyModel implements Serializable {
-    private static final long serialVersionUID = 2009328107616383251L;
-
-    private String pri;
+public class AccessKeyModel extends ModelAbstract<AccessKeyModel> {
+    private static final long serialVersionUID = 2490976112052458168L;
+    
+    private String applicationHid;
+    private String companyHid;
     private String apiKey;
-    private String secretKey;
-    private String className;
+    private String secretKey;  
+	private String expiration;
+    private String name;
+    private List<AccessPrivilegeModel> privileges = new ArrayList<>();
+    
+	public String getApplicationHid() {
+		return applicationHid;
+	}
+	
+	public void setApplicationHid(String applicationHid) {
+		this.applicationHid = applicationHid;
+	}
+	
+	public AccessKeyModel withApplicationHid(String applicationHid) {
+		setApplicationHid(applicationHid);
+	    return this;
+	}
+	
+	public String getCompanyHid() {
+		return companyHid;
+	}
+	
+	public void setCompanyHid(String companyHid) {
+		this.companyHid = companyHid;
+	}
+	
+	public AccessKeyModel withCompanyHid(String companyHid) {
+		setCompanyHid(companyHid);
+	    return this;
+	}
+	
+	public String getApiKey() {
+		return apiKey;
+	}
+	
+	public void setApiKey(String apiKey) {
+		this.apiKey = apiKey;
+	}
+	
+	public AccessKeyModel withApiKey(String apiKey) {
+		setApiKey(apiKey);
+	    return this;
+	}
+	
+	public String getSecretKey() {
+		return secretKey;
+	}
+	
+	public void setSecretKey(String secretKey) {
+		this.secretKey = secretKey;
+	}
+	
+	public AccessKeyModel withSecretKey(String secretKey) {
+		setSecretKey(secretKey);
+	    return this;
+	}
+	
+	public String getExpiration() {
+		return expiration;
+	}
+	
+	public void setExpiration(String expiration) {
+		this.expiration = expiration;
+	}
+	
+	public AccessKeyModel withExpiration(String expiration){
+		setExpiration(expiration);
+		return this;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public AccessKeyModel withName(String name){
+		setName(name);
+		return this;
+	}
+	
+	public List<AccessPrivilegeModel> getPrivileges() {
+		return privileges;
+	}
+	
+	public void setPrivileges(List<AccessPrivilegeModel> privileges) {
+		this.privileges = privileges;
+	}
+	
+	public AccessKeyModel withPrivileges(List<AccessPrivilegeModel> privileges){
+		setPrivileges(privileges);
+		return this;
+	}
 
-    public String getClassName() {
-        return className;
-    }
+	@Override
+	protected AccessKeyModel self() {
+		return this;
+	}
+	
+    
+	
+    
 
-    public void setClassName(String className) {
-        this.className = className;
-    }
-
-    public String getApiKey() {
-        return apiKey;
-    }
-
-    public void setApiKey(String apiKey) {
-        this.apiKey = apiKey;
-    }
-
-    public String getSecretKey() {
-        return secretKey;
-    }
-
-    public void setSecretKey(String secretKey) {
-        this.secretKey = secretKey;
-    }
-
-    public String getPri() {
-        return pri;
-    }
-
-    public void setPri(String pri) {
-        this.pri = pri;
-    }
 }
