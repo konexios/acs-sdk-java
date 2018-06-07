@@ -16,7 +16,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ApplicationModel extends DefinitionModelAbstract<ApplicationModel> {
-	private static final long serialVersionUID = 4714904875033705099L;
+	private static final long serialVersionUID = 6312571491852669423L;
 
 	private String companyHid;
 	private String productHid;

@@ -33,8 +33,7 @@ public class RoleModel extends DefinitionModelAbstract<RoleModel> {
 	protected RoleModel self() {
 		return this;
 	}
-	
-	
+
 	public List<PrivilegeModel> getRefPrivileges() {
 		return refPrivileges;
 	}
@@ -52,7 +51,6 @@ public class RoleModel extends DefinitionModelAbstract<RoleModel> {
 		return this;
 	}
 	
-
 	public void setRefApplication(ApplicationModel refApplication) {
 		this.refApplication = refApplication;
 	}
@@ -89,9 +87,7 @@ public class RoleModel extends DefinitionModelAbstract<RoleModel> {
 		setEditable(editable);
 		return this;
 	}
-	
-	
-	
+
 	public RoleModel withPrivilegeHids(List<String> privilegeHids) {
 		setPrivilegeHids(privilegeHids);
 		return this;

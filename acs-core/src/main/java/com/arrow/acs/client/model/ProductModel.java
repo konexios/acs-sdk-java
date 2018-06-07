@@ -16,12 +16,12 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ProductModel extends DefinitionModelAbstract<ProductModel> {
-	private static final long serialVersionUID = 1078834605777348220L;
+	private static final long serialVersionUID = 1614384818434220809L;
 
 	private String systemName;
 	private boolean apiSigningRequired;
 	private String parentProductHid;
-	private List<ProductFeatureModel> features= new ArrayList<>();
+	private List<ProductFeature> features = new ArrayList<>();
 
 	@JsonIgnore
 	private ProductModel refParentProduct;
@@ -46,7 +46,7 @@ public class ProductModel extends DefinitionModelAbstract<ProductModel> {
 		return this;
 	}
 	
-	public ProductModel withFeatures(List<ProductFeatureModel> features) {
+	public ProductModel withFeatures(List<ProductFeature> features) {
 		setFeatures(features);
 		return this;
 	}
@@ -88,11 +88,11 @@ public class ProductModel extends DefinitionModelAbstract<ProductModel> {
 		return refParentProduct;
 	}
 
-	public List<ProductFeatureModel> getFeatures() {
+	public List<ProductFeature> getFeatures() {
 		return features;
 	}
 
-	public void setFeatures(List<ProductFeatureModel> features) {
+	public void setFeatures(List<ProductFeature> features) {
 		this.features = features;
 	}
 }

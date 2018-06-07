@@ -16,7 +16,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class UserModel extends AuditableDocumentModelAbstract<UserModel> {
-	private static final long serialVersionUID = -3099948569824181477L;
+	private static final long serialVersionUID = -6984911480132862179L;
 
 	private String login;
 	private UserStatus status;

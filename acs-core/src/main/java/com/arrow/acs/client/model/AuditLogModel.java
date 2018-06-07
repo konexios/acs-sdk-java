@@ -14,7 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class AuditLogModel extends TsModelAbstract<AuditLogModel> {
-	private static final long serialVersionUID = -6713413123784260777L;
+	private static final long serialVersionUID = -4590258846870280768L;
 
 	private String applicationHid; 
 	private String productName;

@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class CompanyModel extends AuditableDocumentModelAbstract<CompanyModel> {
-	private static final long serialVersionUID = -1173608869956123803L;
+	private static final long serialVersionUID = 3922481348859345169L;
 
 	private String name;
 	private String abbrName;
@@ -26,7 +26,7 @@ public class CompanyModel extends AuditableDocumentModelAbstract<CompanyModel> {
 	private PasswordPolicyModel passwordPolicy;
 	private LoginPolicyModel loginPolicy;
 	private String parentCompanyHid;
-	private Set<String>   impersonateUsers = new HashSet<>();;
+	private Set<String> impersonateUsers = new HashSet<>();
 
 	@Override
 	protected CompanyModel self() {

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AccessKeyModel extends ModelAbstract<AccessKeyModel> {
-    private static final long serialVersionUID = 2009328107616383251L;
+    private static final long serialVersionUID = 2490976112052458168L;
     
     private String applicationHid;
     private String companyHid;

@@ -13,7 +13,7 @@ package com.arrow.acs.client.model;
 import java.io.Serializable;
 
 public class ContactModel implements Serializable {
-	private static final long serialVersionUID = 3006465996184026763L;
+	private static final long serialVersionUID = 2625894338786294894L;
 
 	private String firstName;
 	private String lastName;
