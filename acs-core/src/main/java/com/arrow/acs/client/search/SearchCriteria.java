@@ -58,4 +58,36 @@ public abstract class SearchCriteria {
 		}
 		return result.substring(0, result.length() - 1);
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((arrayCriteria == null) ? 0 : arrayCriteria.hashCode());
+		result = prime * result + ((simpleCriteria == null) ? 0 : simpleCriteria.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SearchCriteria other = (SearchCriteria) obj;
+		if (arrayCriteria == null) {
+			if (other.arrayCriteria != null)
+				return false;
+		} else if (!arrayCriteria.equals(other.arrayCriteria))
+			return false;
+		if (simpleCriteria == null) {
+			if (other.simpleCriteria != null)
+				return false;
+		} else if (!simpleCriteria.equals(other.simpleCriteria))
+			return false;
+		return true;
+	}
+
 }
