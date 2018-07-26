@@ -17,6 +17,7 @@ public interface ApiHeaders {
     public final static String X_ARROW_SIGNATURE = "x-arrow-signature";
 
     public final static String X_ARROW_VERSION_1 = "1";
+    public final static String X_ARROW_VERSION_2 = "2";
 
     // backward compatible
     public final static String X_AUTH_TOKEN = "x-auth-token";
