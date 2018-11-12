@@ -14,6 +14,7 @@ import java.io.IOException;
 
 import javax.annotation.PreDestroy;
 
+import org.apache.http.config.SocketConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -23,70 +24,75 @@ import com.arrow.acs.Loggable;
 
 public class ConnectionManager extends Loggable {
 
-	private static final int DEFAULT_MAX_TOTAL_CONNECTIONS = 200;
-	private static final int DEFAULT_MAX_PER_ROUTE_CONNECTIONS = 50;
+    private static final int DEFAULT_MAX_TOTAL_CONNECTIONS = 500;
+    private static final int DEFAULT_MAX_PER_ROUTE_CONNECTIONS = 500;
+    private static final int DEFAULT_VALIDATE_AFTER_INACTIVITY_MS = 5000;
+    private static final int DEFAULT_SOCKET_TIMEOUT_MS = 600000;
 
-	private static final class SingletonHolder {
-		static final ConnectionManager SINGLETON = new ConnectionManager();
-	}
+    private static final class SingletonHolder {
+        static final ConnectionManager SINGLETON = new ConnectionManager();
+    }
 
-	public static ConnectionManager getInstance() {
-		return SingletonHolder.SINGLETON;
-	}
+    public static ConnectionManager getInstance() {
+        return SingletonHolder.SINGLETON;
+    }
 
-	private PoolingHttpClientConnectionManager connectionManager;
+    private PoolingHttpClientConnectionManager connectionManager;
 
-	private int maxTotalConnections = DEFAULT_MAX_TOTAL_CONNECTIONS;
-	private int maxPerRouteConnections = DEFAULT_MAX_PER_ROUTE_CONNECTIONS;
+    private int maxTotalConnections = DEFAULT_MAX_TOTAL_CONNECTIONS;
+    private int maxPerRouteConnections = DEFAULT_MAX_PER_ROUTE_CONNECTIONS;
 
-	private ConnectionManager() {
-		String method = "ConnectionManager";
-		logInfo(method, "...");
-		connectionManager = new PoolingHttpClientConnectionManager();
-		connectionManager.setMaxTotal(maxTotalConnections);
-		connectionManager.setDefaultMaxPerRoute(maxPerRouteConnections);
+    private ConnectionManager() {
+        String method = "ConnectionManager";
+        logInfo(method, "...");
+        connectionManager = new PoolingHttpClientConnectionManager();
+        connectionManager.setMaxTotal(maxTotalConnections);
+        connectionManager.setDefaultMaxPerRoute(maxPerRouteConnections);
+        connectionManager.setValidateAfterInactivity(DEFAULT_VALIDATE_AFTER_INACTIVITY_MS);
+        connectionManager.setDefaultSocketConfig(
+                SocketConfig.custom().setSoKeepAlive(true).setSoTimeout(DEFAULT_SOCKET_TIMEOUT_MS).build());
 
-		// instantiate one
-		try (CloseableHttpClient client = getConnection()) {
-			logInfo(method, "got connection!");
-		} catch (IOException e) {
-			logError(method, e);
-		}
+        // instantiate one
+        try (CloseableHttpClient client = getConnection()) {
+            logInfo(method, "got connection!");
+        } catch (IOException e) {
+            logError(method, e);
+        }
 
-		logInfo(method, "ready");
-	}
+        logInfo(method, "ready");
+    }
 
-	public CloseableHttpClient getConnection() {
-		AcsUtils.notNull(connectionManager, "connection manager is not available");
-		return HttpClients.custom().setConnectionManager(connectionManager).setConnectionManagerShared(true).build();
-	}
+    public CloseableHttpClient getConnection() {
+        AcsUtils.notNull(connectionManager, "connection manager is not available");
+        return HttpClients.custom().setConnectionManager(connectionManager).setConnectionManagerShared(true).build();
+    }
 
-	public int getMaxTotalConnections() {
-		return maxTotalConnections;
-	}
+    public int getMaxTotalConnections() {
+        return maxTotalConnections;
+    }
 
-	public void setMaxTotalConnections(int maxTotalConnections) {
-		this.maxTotalConnections = maxTotalConnections;
-	}
+    public void setMaxTotalConnections(int maxTotalConnections) {
+        this.maxTotalConnections = maxTotalConnections;
+    }
 
-	public int getMaxPerRouteConnections() {
-		return maxPerRouteConnections;
-	}
+    public int getMaxPerRouteConnections() {
+        return maxPerRouteConnections;
+    }
 
-	public void setMaxPerRouteConnections(int maxPerRouteConnections) {
-		this.maxPerRouteConnections = maxPerRouteConnections;
-	}
+    public void setMaxPerRouteConnections(int maxPerRouteConnections) {
+        this.maxPerRouteConnections = maxPerRouteConnections;
+    }
 
-	@PreDestroy
-	public void shutdown() {
-		String method = "shutdown";
-		if (connectionManager != null) {
-			try {
-				logInfo(method, "shutting down connectionManager ...");
-				connectionManager.close();
-				connectionManager = null;
-			} catch (Throwable t) {
-			}
-		}
-	}
+    @PreDestroy
+    public void shutdown() {
+        String method = "shutdown";
+        if (connectionManager != null) {
+            try {
+                logInfo(method, "shutting down connectionManager ...");
+                connectionManager.close();
+                connectionManager = null;
+            } catch (Throwable t) {
+            }
+        }
+    }
 }
