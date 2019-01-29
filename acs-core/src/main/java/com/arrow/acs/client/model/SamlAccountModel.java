@@ -14,8 +14,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.arrow.acs.AcsUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import olympus.util.AcsUtils;
 
 public class SamlAccountModel implements Serializable {
 	private static final long serialVersionUID = 1789272637985518778L;

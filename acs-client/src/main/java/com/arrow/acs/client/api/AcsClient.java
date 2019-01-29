@@ -10,7 +10,8 @@
  *******************************************************************************/
 package com.arrow.acs.client.api;
 
-import com.arrow.acs.AcsUtils;
+import olympus.client.api.ApiConfig;
+import olympus.util.AcsUtils;
 
 public final class AcsClient {
 	private ApiConfig apiConfig;

@@ -12,7 +12,7 @@ package com.arrow.acs.client.model;
 
 import java.io.Serializable;
 
-import com.arrow.acs.client.search.SearchCriteria;
+import olympus.client.model.SearchCriteria;
 
 public class CloudMqttRequestParams implements Serializable {
 	private static final long serialVersionUID = -7465507284897070170L;

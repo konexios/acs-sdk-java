@@ -22,6 +22,8 @@ import com.arrow.acs.client.model.RoleModel;
 import com.arrow.acs.client.model.SubscriptionModel;
 import com.arrow.acs.client.model.UserModel;
 
+import olympus.client.api.ApiConfig;
+
 public final class ClientCacheApi extends ClientApiAbstract {
 	private static final String CACHE_ROOT_URL = WEB_SERVICE_ROOT_URL + "/cache";
 

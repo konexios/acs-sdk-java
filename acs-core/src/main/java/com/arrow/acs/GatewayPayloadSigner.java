@@ -18,6 +18,8 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.codec.digest.HmacAlgorithms;
 import org.apache.commons.codec.digest.HmacUtils;
 
+import olympus.util.AcsUtils;
+
 public class GatewayPayloadSigner extends Loggable {
 	public static final String PAYLOAD_SIGNATURE_VERSION_1 = "1";
 	private String secretKey;

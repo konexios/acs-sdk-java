@@ -15,8 +15,10 @@ import java.net.URI;
 import org.apache.http.client.methods.HttpGet;
 
 import com.arrow.acs.client.model.AccessKeyModel;
-import com.arrow.acs.client.model.ListResultModel;
 import com.fasterxml.jackson.core.type.TypeReference;
+
+import olympus.client.api.ApiConfig;
+import olympus.client.model.ListResultModel;
 
 public class ClientApplicationApi extends ClientApiAbstract {
 	private static final String APPLICATIONS_ROOT_URL = WEB_SERVICE_ROOT_URL + "/applications";

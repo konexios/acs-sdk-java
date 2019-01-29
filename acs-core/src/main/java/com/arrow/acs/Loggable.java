@@ -13,6 +13,8 @@ package com.arrow.acs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import olympus.util.AcsUtils;
+
 public abstract class Loggable {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 

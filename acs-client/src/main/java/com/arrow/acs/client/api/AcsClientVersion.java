@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.arrow.acs.client.api;
 
-import com.arrow.acs.VersionAbstract;
-import com.arrow.acs.client.model.VersionModel;
+import olympus.VersionAbstract;
+import olympus.model.read.VersionModel;
 
 public final class AcsClientVersion extends VersionAbstract {
 	private final static VersionModel VERSION = readManifest(AcsClientVersion.class);

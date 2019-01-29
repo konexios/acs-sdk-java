@@ -20,6 +20,8 @@ import com.arrow.acs.JsonUtils;
 import com.arrow.acs.client.model.UserAuthenticationModel;
 import com.arrow.acs.client.model.UserModel;
 
+import olympus.client.api.ApiConfig;
+
 public final class ClientUserApi extends ClientApiAbstract {
 	private static final String USERS_ROOT_URL = WEB_SERVICE_ROOT_URL + "/users";
 

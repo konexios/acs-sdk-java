@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.arrow.acs.client.model;
 
+import olympus.client.model.ModelAbstract;
+
 public abstract class TsModelAbstract<T extends TsModelAbstract<T>> extends ModelAbstract<T> {
 	private static final long serialVersionUID = -6573132535292516518L;
 

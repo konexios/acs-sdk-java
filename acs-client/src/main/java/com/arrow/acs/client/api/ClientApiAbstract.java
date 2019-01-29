@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.arrow.acs.client.api;
 
+import olympus.client.api.ApiAbstract;
+import olympus.client.api.ApiConfig;
+
 abstract class ClientApiAbstract extends ApiAbstract {
 	protected static final String WEB_SERVICE_ROOT_URL = "/api/v1/pegasus";
 
