@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.arrow.acs.client.api;
 
-import java.io.IOException;
-
 import javax.annotation.PreDestroy;
 
 import org.apache.http.config.SocketConfig;
@@ -19,7 +17,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 
-import com.arrow.acs.AcsUtils;
 import com.arrow.acs.Loggable;
 
 public class ConnectionManager extends Loggable {
@@ -38,6 +35,7 @@ public class ConnectionManager extends Loggable {
     }
 
     private PoolingHttpClientConnectionManager connectionManager;
+    private CloseableHttpClient sharedClient;
 
     private int maxTotalConnections = DEFAULT_MAX_TOTAL_CONNECTIONS;
     private int maxPerRouteConnections = DEFAULT_MAX_PER_ROUTE_CONNECTIONS;
@@ -52,19 +50,15 @@ public class ConnectionManager extends Loggable {
         connectionManager.setDefaultSocketConfig(
                 SocketConfig.custom().setSoKeepAlive(true).setSoTimeout(DEFAULT_SOCKET_TIMEOUT_MS).build());
 
-        // instantiate one
-        try (CloseableHttpClient client = getConnection()) {
-            logInfo(method, "got connection!");
-        } catch (IOException e) {
-            logError(method, e);
-        }
+        // initialize shared client
+        sharedClient = HttpClients.custom().setConnectionManager(connectionManager).setConnectionManagerShared(true)
+                .build();
 
         logInfo(method, "ready");
     }
 
-    public CloseableHttpClient getConnection() {
-        AcsUtils.notNull(connectionManager, "connection manager is not available");
-        return HttpClients.custom().setConnectionManager(connectionManager).setConnectionManagerShared(true).build();
+    public CloseableHttpClient getSharedClient() {
+        return sharedClient;
     }
 
     public int getMaxTotalConnections() {
