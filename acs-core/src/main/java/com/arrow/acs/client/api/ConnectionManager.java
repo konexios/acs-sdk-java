@@ -21,8 +21,8 @@ import com.arrow.acs.Loggable;
 
 public class ConnectionManager extends Loggable {
 
-    private static final int DEFAULT_MAX_TOTAL_CONNECTIONS = 500;
-    private static final int DEFAULT_MAX_PER_ROUTE_CONNECTIONS = 500;
+    private static final int DEFAULT_MAX_TOTAL_CONNECTIONS = 2000;
+    private static final int DEFAULT_MAX_PER_ROUTE_CONNECTIONS = 2000;
     private static final int DEFAULT_VALIDATE_AFTER_INACTIVITY_MS = 5000;
     private static final int DEFAULT_SOCKET_TIMEOUT_MS = 600000;
 
@@ -42,7 +42,7 @@ public class ConnectionManager extends Loggable {
 
     private ConnectionManager() {
         String method = "ConnectionManager";
-        logInfo(method, "...");
+        logInfo(method, "maxTotalConnections: %d", maxPerRouteConnections);
         connectionManager = new PoolingHttpClientConnectionManager();
         connectionManager.setMaxTotal(maxTotalConnections);
         connectionManager.setDefaultMaxPerRoute(maxPerRouteConnections);
