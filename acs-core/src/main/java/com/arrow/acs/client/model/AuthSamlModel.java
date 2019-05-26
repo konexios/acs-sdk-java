@@ -20,6 +20,26 @@ public class AuthSamlModel implements Serializable {
 	private String lastNameAttr;
 	private String emailAttr;
 
+	public AuthSamlModel withIdp(String idp) {
+		setIdp(idp);
+		return this;
+	}
+
+	public AuthSamlModel withFirstNameAttr(String firstNameAttr) {
+		setFirstNameAttr(firstNameAttr);
+		return this;
+	}
+
+	public AuthSamlModel withLastNameAttr(String lastNameAttr) {
+		setLastNameAttr(lastNameAttr);
+		return this;
+	}
+
+	public AuthSamlModel withEmailAttr(String emailAttr) {
+		setEmailAttr(emailAttr);
+		return this;
+	}
+
 	public String getIdp() {
 		return idp;
 	}

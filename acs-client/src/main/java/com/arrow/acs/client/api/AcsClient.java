@@ -14,38 +14,61 @@ import com.arrow.acs.AcsUtils;
 
 public final class AcsClient {
 	private ApiConfig apiConfig;
-	private ClientCacheApi cacheApi;
-	private ClientUserApi userApi;
-	private ClientApplicationApi applicationApi;
+	private ApplicationApi applicationApi;
+	private CacheApi cacheApi;
+	private CompanyApi companyApi;
+	private PrivilegeApi privilegeApi;
+	private ProductApi productApi;
+	private RoleApi roleApi;
+	private SubscriptionApi subscriptionApi;
+	private UserApi userApi;
 
 	public AcsClient(ApiConfig apiConfig) {
 		AcsUtils.notNull(apiConfig, "apiConfig is not set");
 		this.apiConfig = apiConfig;
-		this.cacheApi = new ClientCacheApi(apiConfig);
-		this.userApi = new ClientUserApi(apiConfig);
-		this.applicationApi = new ClientApplicationApi(apiConfig);
 	}
 
 	public void setApiConfig(ApiConfig apiConfig) {
 		AcsUtils.notNull(apiConfig, "apiConfig is not set");
 		this.apiConfig = apiConfig;
-		this.cacheApi.setApiConfig(apiConfig);
-		this.userApi.setApiConfig(apiConfig);
+		if (applicationApi != null)
+			applicationApi.setApiConfig(apiConfig);
 	}
 
 	public ApiConfig getApiConfig() {
 		return apiConfig;
 	}
 
-	public ClientCacheApi getCacheApi() {
-		return cacheApi;
+	public synchronized ApplicationApi getApplicationApi() {
+		return applicationApi != null ? applicationApi : (applicationApi = new ApplicationApi(apiConfig));
 	}
 
-	public ClientUserApi getUserApi() {
-		return userApi;
+	public synchronized CacheApi getCacheApi() {
+		return cacheApi != null ? cacheApi : (cacheApi = new CacheApi(apiConfig));
 	}
 
-	public ClientApplicationApi getApplicationApi() {
-		return applicationApi;
+	public synchronized CompanyApi getCompanyApi() {
+		return companyApi != null ? companyApi : (companyApi = new CompanyApi(apiConfig));
 	}
+
+	public synchronized PrivilegeApi getPrivilegeApi() {
+		return privilegeApi != null ? privilegeApi : (privilegeApi = new PrivilegeApi(apiConfig));
+	}
+
+	public synchronized ProductApi getProductApi() {
+		return productApi != null ? productApi : (productApi = new ProductApi(apiConfig));
+	}
+
+	public synchronized RoleApi getRoleApi() {
+		return productApi != null ? roleApi : (roleApi = new RoleApi(apiConfig));
+	}
+
+	public synchronized SubscriptionApi getSubscriptionApi() {
+		return subscriptionApi != null ? subscriptionApi : (subscriptionApi = new SubscriptionApi(apiConfig));
+	}
+
+	public synchronized UserApi getUserApi() {
+		return userApi != null ? userApi : (userApi = new UserApi(apiConfig));
+	}
+
 }

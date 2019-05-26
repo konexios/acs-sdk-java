@@ -41,6 +41,11 @@ public class AuditLogModel extends TsModelAbstract<AuditLogModel> {
 		return this;
 	}
 
+	public AuditLogModel withParameters(Map<String, String> parameters) {
+		setParameters(parameters);
+		return this;
+	}
+
 	public String getProductName() {
 		return productName;
 	}

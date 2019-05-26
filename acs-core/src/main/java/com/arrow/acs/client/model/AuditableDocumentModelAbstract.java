@@ -10,14 +10,16 @@
  *******************************************************************************/
 package com.arrow.acs.client.model;
 
+import java.time.Instant;
+
 public abstract class AuditableDocumentModelAbstract<T extends AuditableDocumentModelAbstract<T>>
         extends TsModelAbstract<T> {
 	private static final long serialVersionUID = -1644864075961766068L;
 
-	private String lastModifiedDate;
+	private Instant lastModifiedDate;
 	private String lastModifiedBy;
 
-	public T withLastModifiedDate(String lastModifiedDate) {
+	public T withLastModifiedDate(Instant lastModifiedDate) {
 		setLastModifiedDate(lastModifiedDate);
 		return self();
 	}
@@ -27,11 +29,11 @@ public abstract class AuditableDocumentModelAbstract<T extends AuditableDocument
 		return self();
 	}
 
-	public String getLastModifiedDate() {
+	public Instant getLastModifiedDate() {
 		return lastModifiedDate;
 	}
 
-	public void setLastModifiedDate(String lastModifiedDate) {
+	public void setLastModifiedDate(Instant lastModifiedDate) {
 		this.lastModifiedDate = lastModifiedDate;
 	}
 

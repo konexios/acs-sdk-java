@@ -16,6 +16,11 @@ public class UserAppAuthenticationModel extends UserAuthenticationModel {
 
 	private String applicationCode;
 
+	public UserAppAuthenticationModel withApplicationCode(String applicationCode) {
+		setApplicationCode(applicationCode);
+		return this;
+	}
+
 	public String getApplicationCode() {
 		return applicationCode;
 	}
