@@ -24,8 +24,7 @@ public final class AcsClient {
 	private UserApi userApi;
 
 	public AcsClient(ApiConfig apiConfig) {
-		AcsUtils.notNull(apiConfig, "apiConfig is not set");
-		this.apiConfig = apiConfig;
+		setApiConfig(apiConfig);
 	}
 
 	public void setApiConfig(ApiConfig apiConfig) {
@@ -33,6 +32,20 @@ public final class AcsClient {
 		this.apiConfig = apiConfig;
 		if (applicationApi != null)
 			applicationApi.setApiConfig(apiConfig);
+		if (cacheApi != null)
+			cacheApi.setApiConfig(apiConfig);
+		if (companyApi != null)
+			companyApi.setApiConfig(apiConfig);
+		if (privilegeApi != null)
+			privilegeApi.setApiConfig(apiConfig);
+		if (productApi != null)
+			productApi.setApiConfig(apiConfig);
+		if (roleApi != null)
+			roleApi = new RoleApi(apiConfig);
+		if (subscriptionApi != null)
+			subscriptionApi = new SubscriptionApi(apiConfig);
+		if (userApi != null)
+			userApi = new UserApi(apiConfig);
 	}
 
 	public ApiConfig getApiConfig() {

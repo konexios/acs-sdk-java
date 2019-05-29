@@ -30,12 +30,13 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.zip.GZIPOutputStream;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
-public class AcsUtils {
+public final class AcsUtils {
 	public final static String EMPTY_TRING = "";
 	public final static String HMAC_SHA_256 = "HmacSha256";
 	public final static String SHA_256 = "SHA-256";
@@ -148,6 +149,32 @@ public class AcsUtils {
 			return printHex(MessageDigest.getInstance(SHA_256).digest(data.getBytes(StandardCharsets.UTF_8)));
 		} catch (Exception e) {
 			throw new AcsRuntimeException("error while calculating: " + SHA_256, e);
+		}
+	}
+
+	public static byte[] gzip(String str) {
+		if (AcsUtils.isEmpty(str)) {
+			return null;
+		}
+		return gzip(str.getBytes(StandardCharsets.UTF_8));
+	}
+
+	public static byte[] gzip(byte[] input) {
+		if (input == null || input.length == 0) {
+			return input;
+		}
+		ByteArrayOutputStream bos = null;
+		GZIPOutputStream gos = null;
+		try {
+			bos = new ByteArrayOutputStream();
+			gos = new GZIPOutputStream(bos);
+			gos.write(input);
+			return bos.toByteArray();
+		} catch (Throwable t) {
+			throw new AcsRuntimeException("gzip error", t);
+		} finally {
+			AcsUtils.close(gos);
+			AcsUtils.close(bos);
 		}
 	}
 

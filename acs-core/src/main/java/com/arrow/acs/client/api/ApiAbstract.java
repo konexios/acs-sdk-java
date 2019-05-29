@@ -86,7 +86,8 @@ public abstract class ApiAbstract extends Loggable {
 		try {
 			URIBuilder uriBuilder = new URIBuilder(AcsUtils.isEmpty(baseUrl) ? AcsUtils.EMPTY_TRING : baseUrl);
 			if (!AcsUtils.isEmpty(path)) {
-				uriBuilder.setPath(EXTRA_SLASHES.matcher(uriBuilder.getPath() + '/' + path).replaceAll("/"));
+				uriBuilder.setPath(
+						EXTRA_SLASHES.matcher(AcsUtils.trimToEmpty(uriBuilder.getPath()) + '/' + path).replaceAll("/"));
 			}
 			if (criteria != null) {
 				uriBuilder.setParameters(criteria.getAllCriteria());
