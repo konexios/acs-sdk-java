@@ -16,11 +16,7 @@ import com.arrow.acs.AcsRuntimeException;
 public class AcsClientException extends AcsRuntimeException {
 	private static final long serialVersionUID = -2538807905893177034L;
 
-	private AcsErrorResponse error;
-
-	public AcsClientException(Throwable t) {
-		super(t.getMessage(), t);
-	}
+	private final AcsErrorResponse error;
 
 	public AcsClientException(String message, AcsErrorResponse error) {
 		super(message);

@@ -16,153 +16,143 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.codec.digest.HmacAlgorithms;
-import org.apache.commons.codec.digest.HmacUtils;
-
 public class ApiRequestSigner extends Loggable {
-    private String secretKey;
-    private String method;
-    private String uri;
-    private String apiKey;
-    private String timestamp;
-    private String payload;
-    private List<String> parameters;
+	private String secretKey;
+	private String method;
+	private String uri;
+	private String apiKey;
+	private String timestamp;
+	private String payload;
+	private List<String> parameters;
 
-    private ApiRequestSigner(String secretKey) {
-        this.parameters = new ArrayList<>();
-        this.secretKey = secretKey;
-        this.payload = "";
-    }
+	private ApiRequestSigner(String secretKey) {
+		this.parameters = new ArrayList<>();
+		this.secretKey = secretKey;
+		this.payload = "";
+	}
 
-    public static ApiRequestSigner create(String secretKey) {
-        AcsUtils.notEmpty(secretKey, "secretKey is empty");
-        return new ApiRequestSigner(secretKey);
-    }
+	public static ApiRequestSigner create(String secretKey) {
+		AcsUtils.notEmpty(secretKey, "secretKey is empty");
+		return new ApiRequestSigner(secretKey);
+	}
 
-    public ApiRequestSigner payload(String payload) {
-        AcsUtils.notNull(payload, "payload is null");
-        this.payload = payload;
-        return this;
-    }
+	public ApiRequestSigner payload(String payload) {
+		AcsUtils.notNull(payload, "payload is null");
+		this.payload = payload;
+		return this;
+	}
 
-    public ApiRequestSigner method(String method) {
-        AcsUtils.notEmpty(method, "method is empty");
-        this.method = method.toUpperCase();
-        return this;
-    }
+	public ApiRequestSigner method(String method) {
+		AcsUtils.notEmpty(method, "method is empty");
+		this.method = method.toUpperCase();
+		return this;
+	}
 
-    public ApiRequestSigner canonicalUri(String uri) {
-        AcsUtils.notEmpty(uri, "uri is empty");
-        this.uri = uri;
-        return this;
-    }
+	public ApiRequestSigner canonicalUri(String uri) {
+		AcsUtils.notEmpty(uri, "uri is empty");
+		this.uri = uri;
+		return this;
+	}
 
-    public ApiRequestSigner parameter(String name, String value) {
-        AcsUtils.notEmpty(name, "name is empty");
-        try {
-            parameters.add(
-                    String.format("%s=%s", URLEncoder.encode(name.toLowerCase(), StandardCharsets.UTF_8.toString()),
-                            AcsUtils.trimToEmpty(value)));
-        } catch (Exception e) {
-            throw new AcsSystemException("system error", e);
-        }
-        return this;
-    }
+	public ApiRequestSigner parameter(String name, String value) {
+		AcsUtils.notEmpty(name, "name is empty");
+		try {
+			parameters.add(
+					String.format("%s=%s", URLEncoder.encode(name.toLowerCase(), StandardCharsets.UTF_8.toString()),
+							AcsUtils.trimToEmpty(value)));
+		} catch (Exception e) {
+			throw new AcsSystemException("system error", e);
+		}
+		return this;
+	}
 
-    public ApiRequestSigner apiKey(String apiKey) {
-        AcsUtils.notEmpty(apiKey, "apiKey is empty");
-        this.apiKey = apiKey;
-        return this;
-    }
+	public ApiRequestSigner apiKey(String apiKey) {
+		AcsUtils.notEmpty(apiKey, "apiKey is empty");
+		this.apiKey = apiKey;
+		return this;
+	}
 
-    public ApiRequestSigner timestamp(String timestamp) {
-        AcsUtils.notEmpty(timestamp, "timestamp is empty");
-        this.timestamp = timestamp;
-        return this;
-    }
+	public ApiRequestSigner timestamp(String timestamp) {
+		AcsUtils.notEmpty(timestamp, "timestamp is empty");
+		this.timestamp = timestamp;
+		return this;
+	}
 
-    public String signV0() {
-        String method = "signV0";
-        validateRequired();
-        StringBuilder builder = buildCanonicalRequest();
-        builder.append(String.format("%s=%s\n", ApiHeaders.X_ARROW_APIKEY, apiKey));
-        builder.append(String.format("%s=%s", ApiHeaders.X_ARROW_DATE, timestamp));
+	public String signV0() {
+		String method = "signV0";
+		validateRequired();
+		StringBuilder builder = buildCanonicalRequest();
+		builder.append(String.format("%s=%s\n", ApiHeaders.X_ARROW_APIKEY, apiKey));
+		builder.append(String.format("%s=%s", ApiHeaders.X_ARROW_DATE, timestamp));
 
-        String stringToSign = builder.toString();
-        logDebug(method, "stringToSign: %s\n", stringToSign);
-        return new HmacUtils(HmacAlgorithms.HMAC_SHA_256, secretKey).hmacHex(stringToSign);
-    }
+		String stringToSign = builder.toString();
+		logDebug(method, "stringToSign: %s\n", stringToSign);
+		return AcsUtils.hmacSha256Hex(secretKey, stringToSign);
+	}
 
-    public String signV1() {
-        String method = "signV1";
-        validateRequired();
+	public String signV1() {
+		String method = "signV1";
+		validateRequired();
 
-        StringBuilder builder = buildCanonicalRequest();
-        builder.append(hash(payload));
+		StringBuilder builder = buildCanonicalRequest();
+		builder.append(AcsUtils.sha256Hex(payload));
 
-        StringBuilder stringToSign = new StringBuilder();
-        stringToSign.append(hash(builder.toString())).append('\n');
-        stringToSign.append(apiKey).append('\n');
-        stringToSign.append(timestamp).append('\n');
-        stringToSign.append(ApiHeaders.X_ARROW_VERSION_1);
-        logDebug(method, "stringToSign: %s\n", stringToSign);
+		StringBuilder stringToSign = new StringBuilder();
+		stringToSign.append(AcsUtils.sha256Hex(builder.toString())).append('\n');
+		stringToSign.append(apiKey).append('\n');
+		stringToSign.append(timestamp).append('\n');
+		stringToSign.append(ApiHeaders.X_ARROW_VERSION_1);
+		logDebug(method, "stringToSign: %s\n", stringToSign);
 
-        String signingKey = new HmacUtils(HmacAlgorithms.HMAC_SHA_256, ApiHeaders.X_ARROW_VERSION_1)
-                .hmacHex(new HmacUtils(HmacAlgorithms.HMAC_SHA_256, timestamp)
-                        .hmacHex(new HmacUtils(HmacAlgorithms.HMAC_SHA_256, apiKey).hmacHex(secretKey)));
+		return AcsUtils.hmacSha256Hex(
+				AcsUtils.hmacSha256Hex(ApiHeaders.X_ARROW_VERSION_1,
+						AcsUtils.hmacSha256Hex(timestamp, AcsUtils.hmacSha256Hex(apiKey, secretKey))),
+				stringToSign.toString());
+	}
 
-        return new HmacUtils(HmacAlgorithms.HMAC_SHA_256, signingKey).hmacHex(stringToSign.toString());
-    }
+	public String signV2() {
+		String method = "signV2";
+		validateRequired();
 
-    public String signV2() {
-        String method = "signV2";
-        validateRequired();
+		StringBuilder builder = buildCanonicalRequest();
+		builder.append(AcsUtils.sha256Hex(payload));
 
-        StringBuilder builder = buildCanonicalRequest();
-        builder.append(hash(payload));
+		StringBuilder stringToSign = new StringBuilder();
+		stringToSign.append(AcsUtils.sha256Hex(builder.toString())).append('\n');
+		stringToSign.append(apiKey).append('\n');
+		stringToSign.append(timestamp).append('\n');
+		stringToSign.append(ApiHeaders.X_ARROW_VERSION_2);
+		logDebug(method, "stringToSign: %s\n", stringToSign);
 
-        StringBuilder stringToSign = new StringBuilder();
-        stringToSign.append(hash(builder.toString())).append('\n');
-        stringToSign.append(apiKey).append('\n');
-        stringToSign.append(timestamp).append('\n');
-        stringToSign.append(ApiHeaders.X_ARROW_VERSION_2);
-        logDebug(method, "stringToSign: %s\n", stringToSign);
+		return AcsUtils.hmacSha256Hex(
+				AcsUtils.hmacSha256Hex(ApiHeaders.X_ARROW_VERSION_2,
+						AcsUtils.hmacSha256Hex(timestamp, AcsUtils.hmacSha256Hex(secretKey, apiKey))),
+				stringToSign.toString());
+	}
 
-        String signingKey = new HmacUtils(HmacAlgorithms.HMAC_SHA_256, ApiHeaders.X_ARROW_VERSION_2)
-                .hmacHex(new HmacUtils(HmacAlgorithms.HMAC_SHA_256, timestamp)
-                        .hmacHex(new HmacUtils(HmacAlgorithms.HMAC_SHA_256, secretKey).hmacHex(apiKey)));
+	private void validateRequired() {
+		AcsUtils.notEmpty(apiKey, "apiKey is required");
+		AcsUtils.notEmpty(secretKey, "secretKey is required");
+		AcsUtils.notEmpty(timestamp, "timestamp is required");
+	}
 
-        return new HmacUtils(HmacAlgorithms.HMAC_SHA_256, signingKey).hmacHex(stringToSign.toString());
-    }
+	private StringBuilder buildCanonicalRequest() {
 
-    private void validateRequired() {
-        AcsUtils.notEmpty(apiKey, "apiKey is required");
-        AcsUtils.notEmpty(secretKey, "secretKey is required");
-        AcsUtils.notEmpty(timestamp, "timestamp is required");
-    }
+		StringBuilder builder = new StringBuilder();
 
-    private StringBuilder buildCanonicalRequest() {
+		// append method
+		AcsUtils.notEmpty(method, "method is empty");
+		builder.append(method).append('\n');
 
-        StringBuilder builder = new StringBuilder();
+		// append uri
+		AcsUtils.notEmpty(uri, "uri is empty");
+		builder.append(uri).append('\n');
 
-        // append method
-        AcsUtils.notEmpty(method, "method is empty");
-        builder.append(method).append('\n');
-
-        // append uri
-        AcsUtils.notEmpty(uri, "uri is empty");
-        builder.append(uri).append('\n');
-
-        // append parameters
-        if (parameters.size() > 0) {
-            Collections.sort(parameters);
-            parameters.forEach(p -> builder.append(p).append('\n'));
-        }
-        return builder;
-    }
-
-    private String hash(String value) {
-        return DigestUtils.sha256Hex(value);
-    }
+		// append parameters
+		if (parameters.size() > 0) {
+			Collections.sort(parameters);
+			parameters.forEach(p -> builder.append(p).append('\n'));
+		}
+		return builder;
+	}
 }

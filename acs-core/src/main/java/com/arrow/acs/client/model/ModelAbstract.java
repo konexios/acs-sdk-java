@@ -11,8 +11,6 @@
 package com.arrow.acs.client.model;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 public abstract class ModelAbstract<T extends ModelAbstract<T>> implements Serializable {
 	private static final long serialVersionUID = 5491748225878069743L;
@@ -21,7 +19,6 @@ public abstract class ModelAbstract<T extends ModelAbstract<T>> implements Seria
 
 	private String hid;
 	private String pri;
-	private Map<String, String> links = new HashMap<>();
 
 	protected abstract T self();
 
@@ -32,11 +29,6 @@ public abstract class ModelAbstract<T extends ModelAbstract<T>> implements Seria
 
 	public T withPri(String pri) {
 		setPri(pri);
-		return self();
-	}
-
-	public T withLinks(Map<String, String> links) {
-		setLinks(links);
 		return self();
 	}
 
@@ -56,19 +48,12 @@ public abstract class ModelAbstract<T extends ModelAbstract<T>> implements Seria
 		this.hid = hid;
 	}
 
-	public Map<String, String> getLinks() {
-		return links;
-	}
-
-	public void setLinks(Map<String, String> links) {
-		this.links = links;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((hid == null) ? 0 : hid.hashCode());
+		result = prime * result + ((pri == null) ? 0 : pri.hashCode());
 		return result;
 	}
 
@@ -85,6 +70,11 @@ public abstract class ModelAbstract<T extends ModelAbstract<T>> implements Seria
 			if (other.hid != null)
 				return false;
 		} else if (!hid.equals(other.hid))
+			return false;
+		if (pri == null) {
+			if (other.pri != null)
+				return false;
+		} else if (!pri.equals(other.pri))
 			return false;
 		return true;
 	}

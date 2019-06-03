@@ -23,6 +23,46 @@ public class UserAppModel extends UserModel {
 	private String regionHid;
 	private String regionName;
 
+	public UserAppModel withApplicationHid(String applicationHid) {
+		setApplicationHid(applicationHid);
+		return this;
+	}
+
+	public UserAppModel withApplicationName(String applicationName) {
+		setApplicationName(applicationName);
+		return this;
+	}
+
+	public UserAppModel withUserHid(String userHid) {
+		setUserHid(userHid);
+		return this;
+	}
+
+	public UserAppModel withZoneSystemName(String zoneSystemName) {
+		setZoneSystemName(zoneSystemName);
+		return this;
+	}
+
+	public UserAppModel withZoneHid(String zoneHid) {
+		setZoneHid(zoneHid);
+		return this;
+	}
+
+	public UserAppModel withZoneName(String zoneName) {
+		setZoneName(zoneName);
+		return this;
+	}
+
+	public UserAppModel withRegionHid(String regionHid) {
+		setRegionHid(regionHid);
+		return this;
+	}
+
+	public UserAppModel withRegionName(String regionName) {
+		setRegionName(regionName);
+		return this;
+	}
+
 	public String getApplicationHid() {
 		return applicationHid;
 	}
