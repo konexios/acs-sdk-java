@@ -139,18 +139,32 @@ public abstract class ApiAbstract extends Loggable {
 		AcsUtils.notNull(apiConfig, "apiConfig is not set");
 		String method = "execute";
 		logInfo(method, "URI: %s", request.getURI());
-		try (CloseableHttpResponse response = ConnectionManager.getInstance().getSharedClient()
-				.execute(sign(request))) {
-			int statusCode = response.getStatusLine().getStatusCode();
-			if (statusCode != HttpStatus.SC_OK) {
-				String content = AcsUtils.streamToString(response.getEntity().getContent(), StandardCharsets.UTF_8);
-				String message = String.format("error response: %d - %s, error: %s", statusCode,
-						response.getStatusLine().getReasonPhrase(), content);
-				throw new AcsClientException(message,
-						new AcsErrorResponse().withStatus(statusCode).withMessage(message));
+
+		int statusCode = 500;
+		String message = "System Error";
+		for (int i = 0; i < apiConfig.getNumRetries(); i++) {
+			if (i > 0) {
+				logInfo(method, "sleeping for %d seconds ...", apiConfig.getRetryIntervalSecs());
+				AcsUtils.sleepSecs(apiConfig.getRetryIntervalSecs());
 			}
-			return AcsUtils.fastCopy(response.getEntity().getContent(), outputStream);
+			try (CloseableHttpResponse response = ConnectionManager.getInstance().getSharedClient()
+					.execute(sign(request))) {
+				statusCode = response.getStatusLine().getStatusCode();
+				if (statusCode != HttpStatus.SC_OK) {
+					String content = AcsUtils.streamToString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+					message = String.format("error response: %d - %s, error: %s", statusCode,
+							response.getStatusLine().getReasonPhrase(), content);
+					break;
+				}
+				return AcsUtils.fastCopy(response.getEntity().getContent(), outputStream);
+			} catch (AcsClientException e) {
+				throw e;
+			} catch (Throwable e) {
+				message = "API call error: " + AcsUtils.getStackTrace(e);
+				logError(method, message);
+			}
 		}
+		throw new AcsClientException(message, new AcsErrorResponse().withStatus(statusCode).withMessage(message));
 	}
 
 	protected DownloadFileInfo downloadFile(HttpRequestBase request) throws IOException {
@@ -160,57 +174,87 @@ public abstract class ApiAbstract extends Loggable {
 	protected DownloadFileInfo downloadFile(HttpRequestBase request, File outputFile) throws IOException {
 		AcsUtils.notNull(request, "request is null");
 		AcsUtils.notNull(apiConfig, "apiConfig is not set");
-		String method = "execute";
-		logInfo(method, "url: %s", request.getURI());
-		try (CloseableHttpResponse response = ConnectionManager.getInstance().getSharedClient()
-				.execute(sign(request))) {
-			int statusCode = response.getStatusLine().getStatusCode();
-			if (statusCode != HttpStatus.SC_OK) {
-				String content = AcsUtils.streamToString(response.getEntity().getContent(), StandardCharsets.UTF_8);
-				String message = String.format("error response: %d - %s, error: %s", statusCode,
-						response.getStatusLine().getReasonPhrase(), content);
-				throw new AcsClientException(message,
-						new AcsErrorResponse().withStatus(statusCode).withMessage(message));
+		String method = "downloadFile";
+		logInfo(method, "URL: %s", request.getURI());
+
+		int statusCode = 500;
+		String message = "System Error";
+		for (int i = 0; i < apiConfig.getNumRetries(); i++) {
+			if (i > 0) {
+				logInfo(method, "sleeping for %d seconds ...", apiConfig.getRetryIntervalSecs());
+				AcsUtils.sleepSecs(apiConfig.getRetryIntervalSecs());
 			}
-			String fileName = null;
-			Header contentDispositionHeader = response.getFirstHeader("Content-Disposition");
-			if (contentDispositionHeader != null) {
-				String contentDisposition = contentDispositionHeader.getValue();
-				logInfo(method, "found Content-Disposition: %s", contentDisposition);
-				String[] tokens = contentDisposition.split(";", -1);
-				for (String token : tokens) {
-					if (token.contains("=")) {
-						String[] values = token.split("=");
-						if (values.length == 2 && values[0].trim().equalsIgnoreCase("filename")) {
-							fileName = values[1].trim().replace("\"", "");
+			try (CloseableHttpResponse response = ConnectionManager.getInstance().getSharedClient()
+					.execute(sign(request))) {
+				statusCode = response.getStatusLine().getStatusCode();
+				if (statusCode != HttpStatus.SC_OK) {
+					String content = AcsUtils.streamToString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+					message = String.format("error response: %d - %s, error: %s", statusCode,
+							response.getStatusLine().getReasonPhrase(), content);
+					break;
+				}
+				String fileName = null;
+				Header contentDispositionHeader = response.getFirstHeader("Content-Disposition");
+				if (contentDispositionHeader != null) {
+					String contentDisposition = contentDispositionHeader.getValue();
+					logInfo(method, "found Content-Disposition: %s", contentDisposition);
+					String[] tokens = contentDisposition.split(";", -1);
+					for (String token : tokens) {
+						if (token.contains("=")) {
+							String[] values = token.split("=");
+							if (values.length == 2 && values[0].trim().equalsIgnoreCase("filename")) {
+								fileName = values[1].trim().replace("\"", "");
+							}
 						}
 					}
+					logInfo(method, "fileName: %s", fileName);
+				} else {
+					logWarn(method, "Content-Disposition header not found!");
 				}
-				logInfo(method, "fileName: %s", fileName);
-			} else {
-				logWarn(method, "Content-Disposition header not found!");
+				AcsUtils.fastCopy(response.getEntity().getContent(), outputFile);
+				return new DownloadFileInfo().withTempFile(outputFile).withFileName(fileName)
+						.withSize(outputFile.length());
+			} catch (AcsClientException e) {
+				throw e;
+			} catch (Throwable e) {
+				message = "API call error: " + AcsUtils.getStackTrace(e);
+				logError(method, message);
 			}
-			AcsUtils.fastCopy(response.getEntity().getContent(), outputFile);
-			return new DownloadFileInfo().withTempFile(outputFile).withFileName(fileName).withSize(outputFile.length());
 		}
+		throw new AcsClientException(message, new AcsErrorResponse().withStatus(statusCode).withMessage(message));
 	}
 
 	private String execute(HttpRequestBase request) throws IOException {
 		AcsUtils.notNull(request, "request is null");
 		String method = "execute";
 		logInfo(method, "URI: %s", request.getURI());
-		try (CloseableHttpResponse response = ConnectionManager.getInstance().getSharedClient()
-				.execute(sign(request))) {
-			String content = AcsUtils.streamToString(response.getEntity().getContent(), StandardCharsets.UTF_8);
-			int statusCode = response.getStatusLine().getStatusCode();
-			if (statusCode != HttpStatus.SC_OK) {
-				logError(method, "ERROR: %s", content);
-				String message = String.format("error response: %d - %s, error: %s", statusCode,
-						response.getStatusLine().getReasonPhrase(), content);
-				throw new AcsClientException(message, JsonUtils.fromJson(content, AcsErrorResponse.class));
+
+		int statusCode = 500;
+		String message = "System Error";
+		for (int i = 0; i < apiConfig.getNumRetries(); i++) {
+			if (i > 0) {
+				logInfo(method, "sleeping for %d seconds ...", apiConfig.getRetryIntervalSecs());
+				AcsUtils.sleepSecs(apiConfig.getRetryIntervalSecs());
 			}
-			return content;
+			try (CloseableHttpResponse response = ConnectionManager.getInstance().getSharedClient()
+					.execute(sign(request))) {
+				String content = AcsUtils.streamToString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+				statusCode = response.getStatusLine().getStatusCode();
+				if (statusCode != HttpStatus.SC_OK) {
+					logError(method, "ERROR: %s", content);
+					message = String.format("error response: %d - %s, error: %s", statusCode,
+							response.getStatusLine().getReasonPhrase(), content);
+					throw new AcsClientException(message, JsonUtils.fromJson(content, AcsErrorResponse.class));
+				}
+				return content;
+			} catch (AcsClientException e) {
+				throw e;
+			} catch (Throwable e) {
+				message = "API call error: " + AcsUtils.getStackTrace(e);
+				logError(method, message);
+			}
 		}
+		throw new AcsClientException(message, new AcsErrorResponse().withStatus(statusCode).withMessage(message));
 	}
 
 	private ApiRequestSigner getSigner(HttpRequestBase request, Instant timestamp) {

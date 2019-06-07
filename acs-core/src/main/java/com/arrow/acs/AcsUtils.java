@@ -178,6 +178,13 @@ public final class AcsUtils {
 		}
 	}
 
+	public static void sleepSecs(long secs) {
+		try {
+			Thread.sleep(secs * 1000);
+		} catch (Exception e) {
+		}
+	}
+
 	private static long fastCopy(final ReadableByteChannel src, final WritableByteChannel dest) throws IOException {
 		final ByteBuffer buffer = ByteBuffer.allocateDirect(16 * 1024);
 

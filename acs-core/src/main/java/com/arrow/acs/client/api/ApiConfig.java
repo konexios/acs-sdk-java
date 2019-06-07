@@ -15,10 +15,26 @@ import java.io.Serializable;
 public class ApiConfig implements Serializable {
 	private static final long serialVersionUID = 3202503635018331127L;
 
+	private static final int DEFAULT_NUM_RETRIES = 3;
+	private static final int DEFAULT_RETRY_INTERVAL_SECS = 5;
+
 	private String baseUrl;
 	private String baseWebSocketUrl;
 	private String apiKey;
 	private String secretKey;
+
+	private int numRetries = DEFAULT_NUM_RETRIES;
+	private int retryIntervalSecs = DEFAULT_RETRY_INTERVAL_SECS;
+
+	public ApiConfig withNumRetries(int numRetries) {
+		setNumRetries(numRetries);
+		return this;
+	}
+
+	public ApiConfig withRetryIntervalSecs(int retryIntervalSecs) {
+		setRetryIntervalSecs(retryIntervalSecs);
+		return this;
+	}
 
 	public ApiConfig withBaseUrl(String baseUrl) {
 		setBaseUrl(baseUrl);
@@ -70,5 +86,21 @@ public class ApiConfig implements Serializable {
 
 	public void setSecretKey(String secretKey) {
 		this.secretKey = secretKey;
+	}
+
+	public void setNumRetries(int numRetries) {
+		this.numRetries = numRetries;
+	}
+
+	public int getNumRetries() {
+		return numRetries;
+	}
+
+	public void setRetryIntervalSecs(int retryIntervalSecs) {
+		this.retryIntervalSecs = retryIntervalSecs;
+	}
+
+	public int getRetryIntervalSecs() {
+		return retryIntervalSecs;
 	}
 }
