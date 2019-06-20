@@ -130,7 +130,7 @@ public final class AcsUtils {
 	}
 
 	public static String printHex(byte[] data) {
-		return DatatypeConverter.printHexBinary(data);
+		return DatatypeConverter.printHexBinary(data).toLowerCase();
 	}
 
 	public static String hmacSha256Hex(String key, String data) {
