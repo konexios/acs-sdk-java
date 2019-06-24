@@ -96,13 +96,17 @@ public class ApiRequestSigner extends Loggable {
 
 		StringBuilder builder = buildCanonicalRequest();
 		builder.append(AcsUtils.sha256Hex(payload));
+		logDebug(method, "payload:\n%s", payload);
+
+		String canonicalRequest = builder.toString();
+		logDebug(method, "canonicalRequest:\n%s", canonicalRequest);
 
 		StringBuilder stringToSign = new StringBuilder();
-		stringToSign.append(AcsUtils.sha256Hex(builder.toString())).append('\n');
+		stringToSign.append(AcsUtils.sha256Hex(canonicalRequest)).append('\n');
 		stringToSign.append(apiKey).append('\n');
 		stringToSign.append(timestamp).append('\n');
 		stringToSign.append(ApiHeaders.X_ARROW_VERSION_1);
-		logDebug(method, "stringToSign: %s\n", stringToSign);
+		logDebug(method, "stringToSign:\n%s", stringToSign);
 
 		return AcsUtils.hmacSha256Hex(
 				AcsUtils.hmacSha256Hex(ApiHeaders.X_ARROW_VERSION_1,
@@ -116,13 +120,17 @@ public class ApiRequestSigner extends Loggable {
 
 		StringBuilder builder = buildCanonicalRequest();
 		builder.append(AcsUtils.sha256Hex(payload));
+		logDebug(method, "payload:\n%s", payload);
+
+		String canonicalRequest = builder.toString();
+		logDebug(method, "canonicalRequest:\n%s", canonicalRequest);
 
 		StringBuilder stringToSign = new StringBuilder();
-		stringToSign.append(AcsUtils.sha256Hex(builder.toString())).append('\n');
+		stringToSign.append(AcsUtils.sha256Hex(canonicalRequest)).append('\n');
 		stringToSign.append(apiKey).append('\n');
 		stringToSign.append(timestamp).append('\n');
 		stringToSign.append(ApiHeaders.X_ARROW_VERSION_2);
-		logDebug(method, "stringToSign: %s\n", stringToSign);
+		logDebug(method, "stringToSign:\n%s", stringToSign);
 
 		return AcsUtils.hmacSha256Hex(
 				AcsUtils.hmacSha256Hex(ApiHeaders.X_ARROW_VERSION_2,
