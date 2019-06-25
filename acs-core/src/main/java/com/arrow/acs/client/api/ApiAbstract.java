@@ -228,16 +228,21 @@ public abstract class ApiAbstract extends Loggable {
 
 	private HttpRequestBase sign(HttpRequestBase request, SearchCriteria criteria) {
 		String method = "sign";
-		Instant timestamp = Instant.now();
-		ApiRequestSigner signer = getSigner(request, timestamp);
-		if (criteria != null) {
-			for (NameValuePair pair : criteria.getAllCriteria()) {
-				signer.parameter(pair.getName(), pair.getValue());
+		Header[] existing = request.getHeaders(ApiHeaders.X_ARROW_SIGNATURE);
+		if (existing != null && existing.length > 0) {
+			logInfo(method, "request is already signed!");
+		} else {
+			Instant timestamp = Instant.now();
+			ApiRequestSigner signer = getSigner(request, timestamp);
+			if (criteria != null) {
+				for (NameValuePair pair : criteria.getAllCriteria()) {
+					signer.parameter(pair.getName(), pair.getValue());
+				}
 			}
+			String signature = signer.signV1();
+			logDebug(method, SIGNATURE_MSG, signature);
+			addHeaders(request, timestamp, signature);
 		}
-		String signature = signer.signV1();
-		logDebug(method, SIGNATURE_MSG, signature);
-		addHeaders(request, timestamp, signature);
 		return request;
 	}
 
@@ -255,12 +260,12 @@ public abstract class ApiAbstract extends Loggable {
 		AcsUtils.notNull(msg, "msg is null");
 		AcsUtils.notNull(timestamp, "timestamp is null");
 		AcsUtils.notEmpty(apiConfig.getApiKey(), "apiKey is empty");
-		msg.addHeader(HttpHeaders.CONTENT_TYPE, MIME_APPLICATION_JSON);
-		msg.addHeader(HttpHeaders.ACCEPT, MIME_APPLICATION_JSON);
-		msg.addHeader(ApiHeaders.X_ARROW_APIKEY, apiConfig.getApiKey());
-		msg.addHeader(ApiHeaders.X_ARROW_DATE, timestamp.toString());
-		msg.addHeader(ApiHeaders.X_ARROW_VERSION, ApiHeaders.X_ARROW_VERSION_1);
-		msg.addHeader(ApiHeaders.X_ARROW_SIGNATURE, signature);
+		msg.setHeader(HttpHeaders.CONTENT_TYPE, MIME_APPLICATION_JSON);
+		msg.setHeader(HttpHeaders.ACCEPT, MIME_APPLICATION_JSON);
+		msg.setHeader(ApiHeaders.X_ARROW_APIKEY, apiConfig.getApiKey());
+		msg.setHeader(ApiHeaders.X_ARROW_DATE, timestamp.toString());
+		msg.setHeader(ApiHeaders.X_ARROW_VERSION, ApiHeaders.X_ARROW_VERSION_1);
+		msg.setHeader(ApiHeaders.X_ARROW_SIGNATURE, signature);
 	}
 
 	protected void log(String method, ModelAbstract<?> model) {
