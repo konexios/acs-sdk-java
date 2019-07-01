@@ -67,17 +67,19 @@ public class GatewayPayloadSigner extends Loggable {
 		AcsUtils.notEmpty(secretKey, "secretKey is required");
 
 		StringBuilder stringToSign = new StringBuilder();
-		stringToSign.append(AcsUtils.sha256Hex(buildCanonicalRequest())).append('\n');
+		String canonicalRequest = buildCanonicalRequest();
+		logDebug(method, "canonicalRequest: \n%s", canonicalRequest);
+		stringToSign.append(AcsUtils.sha256Hex(canonicalRequest)).append('\n');
 		stringToSign.append(apiKey).append('\n');
 		stringToSign.append(PAYLOAD_SIGNATURE_VERSION_1);
-		logDebug(method, "stringToSign: %s", stringToSign);
+		logDebug(method, "stringToSign: \n%s", stringToSign);
 
 		String signingKey = AcsUtils.hmacSha256Hex(PAYLOAD_SIGNATURE_VERSION_1,
 				AcsUtils.hmacSha256Hex(apiKey, secretKey));
-		logDebug(method, "signingKey: %s", signingKey);
+		logDebug(method, "signingKey: \n%s", signingKey);
 
 		String signature = AcsUtils.hmacSha256Hex(signingKey, stringToSign.toString());
-		logDebug(method, "signature: %s", signature);
+		logDebug(method, "signature: \n%s", signature);
 
 		return signature;
 	}
