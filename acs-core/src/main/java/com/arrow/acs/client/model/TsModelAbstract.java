@@ -10,15 +10,13 @@
  *******************************************************************************/
 package com.arrow.acs.client.model;
 
-import java.time.Instant;
-
 public abstract class TsModelAbstract<T extends TsModelAbstract<T>> extends ModelAbstract<T> {
 	private static final long serialVersionUID = -6573132535292516518L;
 
-	private Instant createdDate;
+	private String createdDate;
 	private String createdBy;
 
-	public T withCreatedDate(Instant createdDate) {
+	public T withCreatedDate(String createdDate) {
 		setCreatedDate(createdDate);
 		return self();
 	}
@@ -28,11 +26,11 @@ public abstract class TsModelAbstract<T extends TsModelAbstract<T>> extends Mode
 		return self();
 	}
 
-	public Instant getCreatedDate() {
+	public String getCreatedDate() {
 		return createdDate;
 	}
 
-	public void setCreatedDate(Instant createdDate) {
+	public void setCreatedDate(String createdDate) {
 		this.createdDate = createdDate;
 	}
 
