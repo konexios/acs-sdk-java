@@ -11,19 +11,60 @@
 package com.arrow.acs.client.model;
 
 import java.io.Serializable;
+import java.time.Instant;
 
 public class CreateSubscriptionModel implements Serializable {
 
 	private static final long serialVersionUID = 7042214314827705530L;
 
 	private String companyHid;
-	private String startDate;
-	private String endDate;
+	private Instant startDate;
+	private Instant endDate;
 	private ContactModel contact;
 	private ContactModel billingContact;
 	private String name;
 	private String description;
 	private boolean enabled;
+
+	public CreateSubscriptionModel withCompanyHid(String companyHid) {
+		setCompanyHid(companyHid);
+		return this;
+	}
+
+	public CreateSubscriptionModel withStartDate(Instant startDate) {
+		setStartDate(startDate);
+		return this;
+	}
+
+	public CreateSubscriptionModel withEndDate(Instant endDate) {
+		setEndDate(endDate);
+		return this;
+	}
+
+	public CreateSubscriptionModel withContact(ContactModel contact) {
+		setContact(contact);
+		return this;
+	}
+
+	public CreateSubscriptionModel withBillingContact(ContactModel billingContact) {
+		setBillingContact(billingContact);
+		return this;
+	}
+
+	public CreateSubscriptionModel withName(String name) {
+		setName(name);
+		return this;
+	}
+
+	public CreateSubscriptionModel withDescription(String description) {
+		setDescription(description);
+		return this;
+	}
+
+	public CreateSubscriptionModel withEnabled(boolean enabled) {
+		setEnabled(enabled);
+		return this;
+	}
 
 	public String getCompanyHid() {
 		return companyHid;
@@ -33,19 +74,19 @@ public class CreateSubscriptionModel implements Serializable {
 		this.companyHid = companyHid;
 	}
 
-	public String getStartDate() {
+	public Instant getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(String startDate) {
+	public void setStartDate(Instant startDate) {
 		this.startDate = startDate;
 	}
 
-	public String getEndDate() {
+	public Instant getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(String endDate) {
+	public void setEndDate(Instant endDate) {
 		this.endDate = endDate;
 	}
 

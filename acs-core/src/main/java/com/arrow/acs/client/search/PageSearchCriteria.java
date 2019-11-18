@@ -8,24 +8,21 @@
  * Contributors:
  *     Arrow Electronics, Inc.
  *******************************************************************************/
-package com.arrow.acs.client.model;
+package com.arrow.acs.client.search;
 
-public class UpdateCompanyModel extends CreateCompanyModel {
+import com.arrow.acs.client.search.SearchCriteria;
 
-	private static final long serialVersionUID = -9081043332686188722L;
+public class PageSearchCriteria extends SearchCriteria {
+	private static final String PAGE = "_page";
+	private static final String SIZE = "_size";
 
-	private String hid;
-
-	public UpdateCompanyModel withHid(String hid) {
-		setHid(hid);
+	public PageSearchCriteria withPage(long page) {
+		simpleCriteria.put(PAGE, Long.toString(page));
 		return this;
 	}
 
-	public String getHid() {
-		return hid;
-	}
-
-	public void setHid(String hid) {
-		this.hid = hid;
+	public PageSearchCriteria withSize(long size) {
+		simpleCriteria.put(SIZE, Long.toString(size));
+		return this;
 	}
 }

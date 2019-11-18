@@ -10,10 +10,10 @@
  *******************************************************************************/
 package com.arrow.acs.client.api;
 
-abstract class ClientApiAbstract extends ApiAbstract {
+abstract class AcsApiAbstract extends ApiAbstract {
 	protected static final String WEB_SERVICE_ROOT_URL = "/api/v1/pegasus";
 
-	ClientApiAbstract(ApiConfig apiConfig) {
+	AcsApiAbstract(ApiConfig apiConfig) {
 		super();
 		setApiConfig(apiConfig);
 	}

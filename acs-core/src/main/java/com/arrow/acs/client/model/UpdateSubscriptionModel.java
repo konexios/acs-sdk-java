@@ -16,6 +16,11 @@ public class UpdateSubscriptionModel extends CreateSubscriptionModel {
 
 	private String hid;
 
+	public UpdateSubscriptionModel withHid(String hid) {
+		setHid(hid);
+		return this;
+	}
+
 	public String getHid() {
 		return hid;
 	}

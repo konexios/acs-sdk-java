@@ -16,6 +16,11 @@ public class UpdateApplicationModel extends CreateApplicationModel {
 
 	private String hid;
 
+	public UpdateApplicationModel withHid(String hid) {
+		setHid(hid);
+		return this;
+	}
+
 	public String getHid() {
 		return hid;
 	}

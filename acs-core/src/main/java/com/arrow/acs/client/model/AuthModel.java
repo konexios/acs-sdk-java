@@ -24,6 +24,31 @@ public class AuthModel extends AuditableDocumentModelAbstract<AuthModel> {
 		return this;
 	}
 
+	public AuthModel withLdap(AuthLdapModel ldap) {
+		setLdap(ldap);
+		return this;
+	}
+
+	public AuthModel withSaml(AuthSamlModel saml) {
+		setSaml(saml);
+		return this;
+	}
+
+	public AuthModel withCompanyHid(String companyHid) {
+		setCompanyHid(companyHid);
+		return this;
+	}
+
+	public AuthModel withType(AuthType type) {
+		setType(type);
+		return this;
+	}
+
+	public AuthModel withEnabled(boolean enabled) {
+		setEnabled(enabled);
+		return this;
+	}
+
 	public String getCompanyHid() {
 		return companyHid;
 	}
@@ -55,7 +80,7 @@ public class AuthModel extends AuditableDocumentModelAbstract<AuthModel> {
 	public void setType(AuthType type) {
 		this.type = type;
 	}
-	
+
 	public boolean isEnabled() {
 		return enabled;
 	}

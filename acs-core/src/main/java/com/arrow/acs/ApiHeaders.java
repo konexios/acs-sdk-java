@@ -11,14 +11,14 @@
 package com.arrow.acs;
 
 public interface ApiHeaders {
-    public final static String X_ARROW_VERSION = "x-arrow-version";
-    public final static String X_ARROW_APIKEY = "x-arrow-apikey";
-    public final static String X_ARROW_DATE = "x-arrow-date";
-    public final static String X_ARROW_SIGNATURE = "x-arrow-signature";
+	String X_ARROW_VERSION = "x-arrow-version";
+	String X_ARROW_APIKEY = "x-arrow-apikey";
+	String X_ARROW_DATE = "x-arrow-date";
+	String X_ARROW_SIGNATURE = "x-arrow-signature";
 
-    public final static String X_ARROW_VERSION_1 = "1";
-    public final static String X_ARROW_VERSION_2 = "2";
+	String X_ARROW_VERSION_1 = "1";
+	String X_ARROW_VERSION_2 = "2";
 
-    // backward compatible
-    public final static String X_AUTH_TOKEN = "x-auth-token";
+	// backward compatible
+	String X_AUTH_TOKEN = "x-auth-token";
 }

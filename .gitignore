@@ -6,3 +6,5 @@ org.eclipse.jdt.core.prefs
 org.springsource.ide.eclipse.gradle.core.prefs
 org.springsource.ide.eclipse.gradle.refresh.prefs
 .settings
+
+\.DS_Store

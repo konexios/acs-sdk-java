@@ -19,6 +19,21 @@ public class AuthLdapModel implements Serializable {
 	private String domain;
 	private String url;
 
+	public AuthLdapModel withApplicationHid(String applicationHid) {
+		setApplicationHid(applicationHid);
+		return this;
+	}
+
+	public AuthLdapModel withDomain(String domain) {
+		setDomain(domain);
+		return this;
+	}
+
+	public AuthLdapModel withUrl(String url) {
+		setUrl(url);
+		return this;
+	}
+
 	public String getDomain() {
 		return domain;
 	}

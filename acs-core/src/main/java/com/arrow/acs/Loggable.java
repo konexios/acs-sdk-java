@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.arrow.acs;
 
+import java.util.IllegalFormatException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +38,11 @@ public abstract class Loggable {
 	}
 
 	public void logInfo(String method, String format, Object... args) {
-		logInfo(method, String.format(format, args));
+		try {
+			logInfo(method, String.format(format, args));
+		} catch (IllegalFormatException e) {
+			logInfo(method, "<IllegalFormatException> " + format);
+		}
 	}
 
 	public void logWarn(String method, String message) {
@@ -44,7 +50,11 @@ public abstract class Loggable {
 	}
 
 	public void logWarn(String method, String message, Object... args) {
-		logWarn(method, String.format(message, args));
+		try {
+			logWarn(method, String.format(message, args));
+		} catch (IllegalFormatException e) {
+			logInfo(method, "<IllegalFormatException> " + message);
+		}
 	}
 
 	public void logError(String method, String message) {
@@ -52,7 +62,11 @@ public abstract class Loggable {
 	}
 
 	public void logError(String method, String message, Object... args) {
-		logError(method, String.format(message, args));
+		try {
+			logError(method, String.format(message, args));
+		} catch (IllegalFormatException e) {
+			logInfo(method, "<IllegalFormatException> " + message);
+		}
 	}
 
 	public void logError(String method, Throwable throwable) {
@@ -60,7 +74,12 @@ public abstract class Loggable {
 	}
 
 	public void logError(String method, String message, Throwable throwable) {
-		logger.error(formatLog(method, String.format("%s \n %s", message, AcsUtils.getStackTrace(throwable))));
+		try {
+			logger.error(formatLog(method, String.format("%s \n %s", message, AcsUtils.getStackTrace(throwable))));
+		} catch (IllegalFormatException e) {
+			logInfo(method, "<IllegalFormatException> " + message);
+		}
+
 	}
 
 	public void logTrace(String method, String message) {
@@ -68,7 +87,11 @@ public abstract class Loggable {
 	}
 
 	public void logTrace(String method, String message, Object... args) {
-		logTrace(method, String.format(message, args));
+		try {
+			logTrace(method, String.format(message, args));
+		} catch (IllegalFormatException e) {
+			logInfo(method, "<IllegalFormatException> " + message);
+		}
 	}
 
 	public void logDebug(String method, String message) {
@@ -76,7 +99,11 @@ public abstract class Loggable {
 	}
 
 	public void logDebug(String method, String message, Object... args) {
-		logDebug(method, String.format(message, args));
+		try {
+			logDebug(method, String.format(message, args));
+		} catch (IllegalFormatException e) {
+			logInfo(method, "<IllegalFormatException> " + message);
+		}
 	}
 
 	protected String formatLog(String method, String message) {

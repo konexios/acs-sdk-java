@@ -199,4 +199,101 @@ public class VersionModel implements Serializable {
 	public void setGitLastCommit(String gitLastCommit) {
 		this.gitLastCommit = gitLastCommit;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((build == null) ? 0 : build.hashCode());
+		result = prime * result + ((builtBy == null) ? 0 : builtBy.hashCode());
+		result = prime * result + ((builtDate == null) ? 0 : builtDate.hashCode());
+		result = prime * result + ((builtJdk == null) ? 0 : builtJdk.hashCode());
+		result = prime * result + ((compatibleMajor == null) ? 0 : compatibleMajor.hashCode());
+		result = prime * result + ((compatibleMinor == null) ? 0 : compatibleMinor.hashCode());
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((gitBranch == null) ? 0 : gitBranch.hashCode());
+		result = prime * result + ((gitLastCommit == null) ? 0 : gitLastCommit.hashCode());
+		result = prime * result + ((major == null) ? 0 : major.hashCode());
+		result = prime * result + ((minor == null) ? 0 : minor.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((vendor == null) ? 0 : vendor.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		VersionModel other = (VersionModel) obj;
+		if (build == null) {
+			if (other.build != null)
+				return false;
+		} else if (!build.equals(other.build))
+			return false;
+		if (builtBy == null) {
+			if (other.builtBy != null)
+				return false;
+		} else if (!builtBy.equals(other.builtBy))
+			return false;
+		if (builtDate == null) {
+			if (other.builtDate != null)
+				return false;
+		} else if (!builtDate.equals(other.builtDate))
+			return false;
+		if (builtJdk == null) {
+			if (other.builtJdk != null)
+				return false;
+		} else if (!builtJdk.equals(other.builtJdk))
+			return false;
+		if (compatibleMajor == null) {
+			if (other.compatibleMajor != null)
+				return false;
+		} else if (!compatibleMajor.equals(other.compatibleMajor))
+			return false;
+		if (compatibleMinor == null) {
+			if (other.compatibleMinor != null)
+				return false;
+		} else if (!compatibleMinor.equals(other.compatibleMinor))
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (gitBranch == null) {
+			if (other.gitBranch != null)
+				return false;
+		} else if (!gitBranch.equals(other.gitBranch))
+			return false;
+		if (gitLastCommit == null) {
+			if (other.gitLastCommit != null)
+				return false;
+		} else if (!gitLastCommit.equals(other.gitLastCommit))
+			return false;
+		if (major == null) {
+			if (other.major != null)
+				return false;
+		} else if (!major.equals(other.major))
+			return false;
+		if (minor == null) {
+			if (other.minor != null)
+				return false;
+		} else if (!minor.equals(other.minor))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (vendor == null) {
+			if (other.vendor != null)
+				return false;
+		} else if (!vendor.equals(other.vendor))
+			return false;
+		return true;
+	}
 }
