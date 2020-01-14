@@ -138,6 +138,30 @@ public class ApiRequestSigner extends Loggable {
 				stringToSign.toString());
 	}
 
+	public String signV3() {
+		String method = "signV3";
+		validateRequired();
+
+		StringBuilder builder = buildCanonicalRequest();
+		builder.append(AcsUtils.sha256Hex(payload));
+		logDebug(method, "payload:\n%s", payload);
+
+		String canonicalRequest = builder.toString();
+		logDebug(method, "canonicalRequest:\n%s", canonicalRequest);
+
+		StringBuilder stringToSign = new StringBuilder();
+		stringToSign.append(AcsUtils.sha256Hex(canonicalRequest)).append('\n');
+		stringToSign.append(apiKey).append('\n');
+		stringToSign.append(timestamp).append('\n');
+		stringToSign.append(ApiHeaders.X_ARROW_VERSION_3);
+		logDebug(method, "stringToSign:\n%s", stringToSign);
+
+		return AcsUtils.hmacSha256Hex(
+				AcsUtils.hmacSha256Hex(AcsUtils.hmacSha256Hex(AcsUtils.hmacSha256Hex(secretKey, apiKey), timestamp),
+						ApiHeaders.X_ARROW_VERSION_3),
+				stringToSign.toString());
+	}
+
 	private void validateRequired() {
 		AcsUtils.notEmpty(apiKey, "apiKey is required");
 		AcsUtils.notEmpty(secretKey, "secretKey is required");

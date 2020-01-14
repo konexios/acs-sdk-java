@@ -16,6 +16,9 @@ import java.util.List;
 
 public class GatewayPayloadSigner extends Loggable {
 	public static final String PAYLOAD_SIGNATURE_VERSION_1 = "1";
+	public static final String PAYLOAD_SIGNATURE_VERSION_2 = "2";
+	public static final String PAYLOAD_SIGNATURE_VERSION_3 = "3";
+
 	private String secretKey;
 	private String hid;
 	private String name;
@@ -76,6 +79,52 @@ public class GatewayPayloadSigner extends Loggable {
 
 		String signingKey = AcsUtils.hmacSha256Hex(PAYLOAD_SIGNATURE_VERSION_1,
 				AcsUtils.hmacSha256Hex(apiKey, secretKey));
+		logDebug(method, "signingKey: \n%s", signingKey);
+
+		String signature = AcsUtils.hmacSha256Hex(signingKey, stringToSign.toString());
+		logDebug(method, "signature: \n%s", signature);
+
+		return signature;
+	}
+
+	public String signV2() {
+		String method = "signV2";
+		AcsUtils.notEmpty(apiKey, "apiKey is required");
+		AcsUtils.notEmpty(secretKey, "secretKey is required");
+
+		StringBuilder stringToSign = new StringBuilder();
+		String canonicalRequest = buildCanonicalRequest();
+		logDebug(method, "canonicalRequest: \n%s", canonicalRequest);
+		stringToSign.append(AcsUtils.sha256Hex(canonicalRequest)).append('\n');
+		stringToSign.append(apiKey).append('\n');
+		stringToSign.append(PAYLOAD_SIGNATURE_VERSION_2);
+		logDebug(method, "stringToSign: \n%s", stringToSign);
+
+		String signingKey = AcsUtils.hmacSha256Hex(PAYLOAD_SIGNATURE_VERSION_2,
+				AcsUtils.hmacSha256Hex(secretKey, apiKey));
+		logDebug(method, "signingKey: \n%s", signingKey);
+
+		String signature = AcsUtils.hmacSha256Hex(signingKey, stringToSign.toString());
+		logDebug(method, "signature: \n%s", signature);
+
+		return signature;
+	}
+
+	public String signV3() {
+		String method = "signV3";
+		AcsUtils.notEmpty(apiKey, "apiKey is required");
+		AcsUtils.notEmpty(secretKey, "secretKey is required");
+
+		StringBuilder stringToSign = new StringBuilder();
+		String canonicalRequest = buildCanonicalRequest();
+		logDebug(method, "canonicalRequest: \n%s", canonicalRequest);
+		stringToSign.append(AcsUtils.sha256Hex(canonicalRequest)).append('\n');
+		stringToSign.append(apiKey).append('\n');
+		stringToSign.append(PAYLOAD_SIGNATURE_VERSION_3);
+		logDebug(method, "stringToSign: \n%s", stringToSign);
+
+		String signingKey = AcsUtils.hmacSha256Hex(AcsUtils.hmacSha256Hex(secretKey, apiKey),
+				PAYLOAD_SIGNATURE_VERSION_3);
 		logDebug(method, "signingKey: \n%s", signingKey);
 
 		String signature = AcsUtils.hmacSha256Hex(signingKey, stringToSign.toString());
