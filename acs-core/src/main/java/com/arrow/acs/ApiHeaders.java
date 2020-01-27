@@ -18,6 +18,7 @@ public interface ApiHeaders {
 
 	String X_ARROW_VERSION_1 = "1";
 	String X_ARROW_VERSION_2 = "2";
+	String X_ARROW_VERSION_3 = "3";
 
 	// backward compatible
 	String X_AUTH_TOKEN = "x-auth-token";
