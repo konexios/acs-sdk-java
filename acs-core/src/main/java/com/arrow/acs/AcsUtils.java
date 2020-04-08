@@ -28,6 +28,7 @@ import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPOutputStream;
@@ -40,6 +41,16 @@ public final class AcsUtils {
 	public final static String EMPTY_TRING = "";
 	public final static String HMAC_SHA_256 = "HmacSha256";
 	public final static String SHA_256 = "SHA-256";
+
+	private final static String RANDOM_CHARS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	private final static SecureRandom RANDOM = new SecureRandom();
+
+	public static String randomString(int size) {
+		if (size <= 0)
+			throw new AcsLogicalException("size must be > 0");
+		return RANDOM.ints(size, 0, RANDOM_CHARS.length()).mapToObj(i -> RANDOM_CHARS.charAt(i))
+				.collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
+	}
 
 	public static boolean isEmpty(final CharSequence cs) {
 		return cs == null || cs.length() == 0;

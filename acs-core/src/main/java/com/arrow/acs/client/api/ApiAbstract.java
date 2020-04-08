@@ -11,15 +11,17 @@
 package com.arrow.acs.client.api;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
+import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -30,12 +32,19 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 
 import com.arrow.acs.AcsErrorResponse;
+import com.arrow.acs.AcsLogicalException;
+import com.arrow.acs.AcsSystemException;
 import com.arrow.acs.AcsUtils;
 import com.arrow.acs.ApiHeaders;
 import com.arrow.acs.ApiRequestSigner;
+import com.arrow.acs.GatewayPayloadSigner;
 import com.arrow.acs.JsonUtils;
 import com.arrow.acs.Loggable;
 import com.arrow.acs.client.AcsClientException;
+import com.arrow.acs.client.model.CloudRequestMethodName;
+import com.arrow.acs.client.model.CloudRequestModel;
+import com.arrow.acs.client.model.CloudRequestParameters;
+import com.arrow.acs.client.model.CloudResponseModel;
 import com.arrow.acs.client.model.DownloadFileInfo;
 import com.arrow.acs.client.model.ExternalHidModel;
 import com.arrow.acs.client.model.HidModel;
@@ -53,6 +62,7 @@ public abstract class ApiAbstract extends Loggable {
 	private static final Pattern EXTRA_SLASHES = Pattern.compile("/{2,}");
 
 	private ApiConfig apiConfig;
+	private MqttHttpChannel mqttHttpChannel;
 
 	public void setApiConfig(ApiConfig apiConfig) {
 		this.apiConfig = apiConfig;
@@ -60,6 +70,14 @@ public abstract class ApiAbstract extends Loggable {
 
 	public ApiConfig getApiConfig() {
 		return apiConfig;
+	}
+
+	public MqttHttpChannel getMqttHttpChannel() {
+		return mqttHttpChannel;
+	}
+
+	public void setMqttHttpChannel(MqttHttpChannel mqttHttpChannel) {
+		this.mqttHttpChannel = mqttHttpChannel;
 	}
 
 	protected URI buildUri(String path) {
@@ -100,45 +118,50 @@ public abstract class ApiAbstract extends Loggable {
 		}
 	}
 
-	protected <T> T execute(HttpEntityEnclosingRequestBase request, String payload, Class<T> clazz) throws IOException {
+	protected <T> T execute(HttpEntityEnclosingRequestBase request, String payload, Class<T> clazz) throws Exception {
 		AcsUtils.notNull(apiConfig, "apiConfig is not set");
 		return JsonUtils.fromJson(execute(sign(request, payload)), clazz);
 	}
 
 	protected <T> T execute(HttpEntityEnclosingRequestBase request, String payload, TypeReference<T> typeRef)
-			throws IOException {
+			throws Exception {
 		AcsUtils.notNull(apiConfig, "apiConfig is not set");
 		return JsonUtils.fromJson(execute(sign(request, payload)), typeRef);
 	}
 
-	protected <T> T execute(HttpRequestBase request, Class<T> clazz) throws IOException {
+	protected <T> T execute(HttpRequestBase request, Class<T> clazz) throws Exception {
 		AcsUtils.notNull(apiConfig, "apiConfig is not set");
 		return JsonUtils.fromJson(execute(sign(request)), clazz);
 	}
 
-	protected <T> T execute(HttpRequestBase request, TypeReference<T> typeRef) throws IOException {
+	protected <T> T execute(HttpRequestBase request, TypeReference<T> typeRef) throws Exception {
 		AcsUtils.notNull(apiConfig, "apiConfig is not set");
 		return JsonUtils.fromJson(execute(sign(request)), typeRef);
 	}
 
 	protected <T> T execute(HttpRequestBase request, SearchCriteria criteria, TypeReference<T> typeRef)
-			throws IOException {
+			throws Exception {
 		AcsUtils.notNull(criteria, "criteria is null");
 		AcsUtils.notNull(apiConfig, "apiConfig is not set");
 		return JsonUtils.fromJson(execute(sign(request, criteria)), typeRef);
 	}
 
-	protected <T> T execute(HttpRequestBase request, SearchCriteria criteria, Class<T> clazz) throws IOException {
+	protected <T> T execute(HttpRequestBase request, SearchCriteria criteria, Class<T> clazz) throws Exception {
 		AcsUtils.notNull(criteria, "criteria is null");
 		AcsUtils.notNull(apiConfig, "apiConfig is not set");
 		return JsonUtils.fromJson(execute(sign(request, criteria)), clazz);
 	}
 
-	protected long execute(HttpRequestBase request, OutputStream outputStream) throws IOException {
+	protected long execute(HttpRequestBase request, OutputStream outputStream) throws Exception {
 		AcsUtils.notNull(request, "request is null");
 		AcsUtils.notNull(apiConfig, "apiConfig is not set");
 		String method = "execute";
 		logInfo(method, "URI: %s", request.getURI());
+
+		if (getMqttHttpChannel() != null) {
+			throw new AcsSystemException("MqttHttpChannel is not implemented for this method yet!");
+		}
+
 		try (CloseableHttpResponse response = ConnectionManager.getInstance().getSharedClient()
 				.execute(sign(request))) {
 			int statusCode = response.getStatusLine().getStatusCode();
@@ -153,15 +176,20 @@ public abstract class ApiAbstract extends Loggable {
 		}
 	}
 
-	protected DownloadFileInfo downloadFile(HttpRequestBase request) throws IOException {
+	protected DownloadFileInfo downloadFile(HttpRequestBase request) throws Exception {
 		return downloadFile(request, File.createTempFile("acs_", ".dat"));
 	}
 
-	protected DownloadFileInfo downloadFile(HttpRequestBase request, File outputFile) throws IOException {
+	protected DownloadFileInfo downloadFile(HttpRequestBase request, File outputFile) throws Exception {
 		AcsUtils.notNull(request, "request is null");
 		AcsUtils.notNull(apiConfig, "apiConfig is not set");
 		String method = "execute";
 		logInfo(method, "url: %s", request.getURI());
+
+		if (getMqttHttpChannel() != null) {
+			throw new AcsSystemException("MqttHttpChannel is not implemented for this method yet!");
+		}
+
 		try (CloseableHttpResponse response = ConnectionManager.getInstance().getSharedClient()
 				.execute(sign(request))) {
 			int statusCode = response.getStatusLine().getStatusCode();
@@ -195,21 +223,26 @@ public abstract class ApiAbstract extends Loggable {
 		}
 	}
 
-	private String execute(HttpRequestBase request) throws IOException {
+	private String execute(HttpRequestBase request) throws Exception {
 		AcsUtils.notNull(request, "request is null");
 		String method = "execute";
 		logInfo(method, "URI: %s", request.getURI());
-		try (CloseableHttpResponse response = ConnectionManager.getInstance().getSharedClient()
-				.execute(sign(request))) {
-			String content = AcsUtils.streamToString(response.getEntity().getContent(), StandardCharsets.UTF_8);
-			int statusCode = response.getStatusLine().getStatusCode();
-			if (statusCode != HttpStatus.SC_OK) {
-				logError(method, "ERROR: %s", content);
-				String message = String.format("error response: %d - %s, error: %s", statusCode,
-						response.getStatusLine().getReasonPhrase(), content);
-				throw new AcsClientException(message, JsonUtils.fromJson(content, AcsErrorResponse.class));
+
+		if (getMqttHttpChannel() != null) {
+			return executeCloudRequest(request);
+		} else {
+			try (CloseableHttpResponse response = ConnectionManager.getInstance().getSharedClient()
+					.execute(sign(request))) {
+				String content = AcsUtils.streamToString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+				int statusCode = response.getStatusLine().getStatusCode();
+				if (statusCode != HttpStatus.SC_OK) {
+					logError(method, "ERROR: %s", content);
+					String message = String.format("error response: %d - %s, error: %s", statusCode,
+							response.getStatusLine().getReasonPhrase(), content);
+					throw new AcsClientException(message, JsonUtils.fromJson(content, AcsErrorResponse.class));
+				}
+				return content;
 			}
-			return content;
 		}
 	}
 
@@ -229,9 +262,7 @@ public abstract class ApiAbstract extends Loggable {
 	private HttpRequestBase sign(HttpRequestBase request, SearchCriteria criteria) {
 		String method = "sign";
 		Header[] existing = request.getHeaders(ApiHeaders.X_ARROW_SIGNATURE);
-		if (existing != null && existing.length > 0) {
-			logInfo(method, "request is already signed!");
-		} else {
+		if (existing == null || existing.length == 0) {
 			Instant timestamp = Instant.now();
 			ApiRequestSigner signer = getSigner(request, timestamp);
 			if (criteria != null) {
@@ -266,6 +297,69 @@ public abstract class ApiAbstract extends Loggable {
 		msg.setHeader(ApiHeaders.X_ARROW_DATE, timestamp.toString());
 		msg.setHeader(ApiHeaders.X_ARROW_VERSION, ApiHeaders.X_ARROW_VERSION_1);
 		msg.setHeader(ApiHeaders.X_ARROW_SIGNATURE, signature);
+	}
+
+	private String executeCloudRequest(HttpRequestBase request) throws Exception {
+		String method = "executeCloudRequest";
+		CloudRequestModel requestModel = buildCloudRequestModel(sign(request));
+
+		CloudResponseModel responseModel = getMqttHttpChannel().sendRequest(requestModel, 30);
+		logInfo(method, "=====>> responseModel: %s", JsonUtils.toJson(responseModel));
+
+		Map<String, String> parameters = responseModel.getParameters();
+		String status = parameters.get(CloudResponseModel.STATUS_PARAMETER_NAME);
+		String message = parameters.get(CloudResponseModel.MESSAGE_PARAMETER_NAME);
+		String payload = parameters.get(CloudResponseModel.PAYLOAD_PARAMETER_NAME);
+
+		if (Objects.equals(status, "OK")) {
+			if (!AcsUtils.isEmpty(payload)) {
+				return payload;
+			} else if (!AcsUtils.isEmpty(message)) {
+				return message;
+			} else {
+				return status;
+			}
+		} else {
+			throw new AcsLogicalException(JsonUtils.toJson(parameters));
+		}
+	}
+
+	private CloudRequestModel buildCloudRequestModel(HttpRequestBase request) throws Exception {
+		String method = "buildCloudRequestModel";
+
+		// TODO need to revisit
+		String eventName = "GatewayToServer_ApiRequest";
+		String requestId = AcsUtils.randomString(32);
+
+		CloudRequestModel requestModel = new CloudRequestModel().withEncrypted(false).withRequestId(requestId)
+				.withEventName(eventName).withSignatureVersion(ApiHeaders.X_ARROW_VERSION_1);
+
+		CloudRequestParameters parameters = new CloudRequestParameters()
+				.withMethod(CloudRequestMethodName.valueOf(request.getMethod())).withUri(request.getURI().getPath())
+				.withApiKey(request.getFirstHeader(ApiHeaders.X_ARROW_APIKEY).getValue())
+				.withTimestamp(request.getFirstHeader(ApiHeaders.X_ARROW_DATE).getValue())
+				.withApiRequestSignature(request.getFirstHeader(ApiHeaders.X_ARROW_SIGNATURE).getValue())
+				.withApiRequestSignatureVersion(request.getFirstHeader(ApiHeaders.X_ARROW_VERSION).getValue());
+
+		if (HttpEntityEnclosingRequestBase.class.isAssignableFrom(request.getClass())) {
+			HttpEntity entity = ((HttpEntityEnclosingRequestBase) request).getEntity();
+			if (entity != null) {
+				parameters.withBody(AcsUtils.streamToString(entity.getContent(), StandardCharsets.UTF_8));
+			}
+		}
+
+		requestModel.withParameters(parameters.getParameters());
+
+		GatewayPayloadSigner signer = GatewayPayloadSigner.create(getApiConfig().getSecretKey())
+				.withApiKey(getApiConfig().getApiKey()).withHid(requestModel.getRequestId())
+				.withName(requestModel.getEventName()).withEncrypted(requestModel.isEncrypted());
+
+		requestModel.getParameters().forEach((name, value) -> signer.withParameter(name, value));
+		requestModel.setSignature(signer.signV1());
+
+		logInfo(method, "requestModel: %s", JsonUtils.toJson(requestModel));
+
+		return requestModel;
 	}
 
 	protected void log(String method, ModelAbstract<?> model) {
