@@ -304,7 +304,7 @@ public abstract class ApiAbstract extends Loggable {
 		CloudRequestModel requestModel = buildCloudRequestModel(sign(request));
 
 		CloudResponseModel responseModel = getMqttHttpChannel().sendRequest(requestModel, 30);
-		logInfo(method, "responseModel: %s", JsonUtils.toJson(responseModel));
+		logDebug(method, "responseModel: %s", JsonUtils.toJson(responseModel));
 
 		Map<String, String> parameters = responseModel.getParameters();
 		String status = parameters.get(CloudResponseModel.STATUS_PARAMETER_NAME);
@@ -357,7 +357,7 @@ public abstract class ApiAbstract extends Loggable {
 		requestModel.getParameters().forEach((name, value) -> signer.withParameter(name, value));
 		requestModel.setSignature(signer.signV1());
 
-		logInfo(method, "requestModel: %s", JsonUtils.toJson(requestModel));
+		logDebug(method, "requestModel: %s", JsonUtils.toJson(requestModel));
 
 		return requestModel;
 	}
