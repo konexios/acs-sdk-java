@@ -303,7 +303,7 @@ public abstract class ApiAbstract extends Loggable {
 		String method = "executeCloudRequest";
 		CloudRequestModel requestModel = buildCloudRequestModel(sign(request));
 
-		CloudResponseModel responseModel = getMqttHttpChannel().sendRequest(requestModel, 30);
+		CloudResponseModel responseModel = getMqttHttpChannel().sendRequest(requestModel, 120);
 		logDebug(method, "responseModel: %s", JsonUtils.toJson(responseModel));
 
 		Map<String, String> parameters = responseModel.getParameters();
