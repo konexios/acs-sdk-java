@@ -33,7 +33,6 @@ import org.apache.http.entity.StringEntity;
 
 import com.arrow.acs.AcsErrorResponse;
 import com.arrow.acs.AcsLogicalException;
-import com.arrow.acs.AcsSystemException;
 import com.arrow.acs.AcsUtils;
 import com.arrow.acs.ApiHeaders;
 import com.arrow.acs.ApiRequestSigner;
@@ -159,7 +158,7 @@ public abstract class ApiAbstract extends Loggable {
 		logInfo(method, "URI: %s", request.getURI());
 
 		if (getMqttHttpChannel() != null) {
-			throw new AcsSystemException("MqttHttpChannel is not implemented for this method yet!");
+			logWarn(method, "download file is not supported via MQTT, falling back to HTTP");
 		}
 
 		try (CloseableHttpResponse response = ConnectionManager.getInstance().getSharedClient()
@@ -187,7 +186,7 @@ public abstract class ApiAbstract extends Loggable {
 		logInfo(method, "url: %s", request.getURI());
 
 		if (getMqttHttpChannel() != null) {
-			throw new AcsSystemException("MqttHttpChannel is not implemented for this method yet!");
+			logWarn(method, "download file is not supported via MQTT, falling back to HTTP");
 		}
 
 		try (CloseableHttpResponse response = ConnectionManager.getInstance().getSharedClient()
@@ -200,8 +199,8 @@ public abstract class ApiAbstract extends Loggable {
 				throw new AcsClientException(message,
 						new AcsErrorResponse().withStatus(statusCode).withMessage(message));
 			}
-			String fileName = null;
 			Header contentDispositionHeader = response.getFirstHeader("Content-Disposition");
+			String fileName = null;
 			if (contentDispositionHeader != null) {
 				String contentDisposition = contentDispositionHeader.getValue();
 				logInfo(method, "found Content-Disposition: %s", contentDisposition);
@@ -311,7 +310,7 @@ public abstract class ApiAbstract extends Loggable {
 		String message = parameters.get(CloudResponseModel.MESSAGE_PARAMETER_NAME);
 		String payload = parameters.get(CloudResponseModel.PAYLOAD_PARAMETER_NAME);
 
-		if (Objects.equals(status, "OK")) {
+		if (Objects.equals(status, CloudResponseModel.Status.OK.name())) {
 			if (!AcsUtils.isEmpty(payload)) {
 				return payload;
 			} else if (!AcsUtils.isEmpty(message)) {
