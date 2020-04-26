@@ -114,4 +114,8 @@ public class JsonUtils {
             throw new AcsSystemException("Error reading object from JSON format", e);
         }
     }
+
+    public static <T> T map(Object value, Class<T> type) {
+        return value == null ? null : fromJsonBytes(toJsonBytes(value), type);
+    }
 }
