@@ -17,6 +17,10 @@ import java.util.Map;
 public class CloudResponseModel implements Serializable {
 	private static final long serialVersionUID = 2080756672787296798L;
 
+	public enum Status {
+		OK, ERROR
+	}
+
 	public static final String STATUS_PARAMETER_NAME = "status";
 	public static final String MESSAGE_PARAMETER_NAME = "message";
 	public static final String PAYLOAD_PARAMETER_NAME = "payload";
