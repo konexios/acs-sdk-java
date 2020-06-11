@@ -35,7 +35,6 @@ import java.util.zip.GZIPOutputStream;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
 
 public final class AcsUtils {
     public final static String EMPTY_TRING = "";
@@ -145,7 +144,13 @@ public final class AcsUtils {
     }
 
     public static String printHex(byte[] data) {
-        return DatatypeConverter.printHexBinary(data).toLowerCase();
+        if (data == null || data.length == 0)
+            return null;
+        StringBuilder sb = new StringBuilder();
+        for (byte b : data) {
+            sb.append(String.format("%02x", b & 0xff));
+        }
+        return sb.toString().toLowerCase();
     }
 
     public static String hmacSha256Hex(String key, String data) {
