@@ -27,37 +27,3 @@ dependencies {
     
     compile("org.springframework.boot:spring-boot-loader:1.5.16.RELEASE")
 }
-
-
-def jarToCopy = copySpec {
-    from "build/libs/${jar.archiveName}"
-}
-
-task copyJar(dependsOn: jar) {
-    doLast {
-        copy {
-            with jarToCopy
-            into "../../acn-sdk-java/lib"
-        }
-        copy {
-            with jarToCopy
-            into "../../pegasus/pegasus-core/lib"
-        }
-        copy {
-            with jarToCopy
-            into "../../kronos/lib"
-        }
-        copy {
-            with jarToCopy
-            into "../../rhea/lib"
-        }
-        copy {
-            with jarToCopy
-            into "../../selene/lib"
-        }
-        copy {
-            with jarToCopy
-            into "../../apollo/lib"
-        }
-    }
-}
