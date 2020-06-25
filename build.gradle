@@ -1,9 +1,9 @@
 buildscript {
     ext {
         log4jVersion = '2.11.2'
-        jacksonVersion = '2.9.9'
-        httpclientVersion = '4.5.8'
-        commonsLang3Version = '3.10'
+        jacksonVersion = '2.11.1'
+        httpclientVersion = '4.5.12'
+        springBootLoaderVersion = '2.3.1.RELEASE'
     }
     repositories {
         mavenLocal()
