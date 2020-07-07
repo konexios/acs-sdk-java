@@ -33,7 +33,6 @@ import org.apache.http.entity.StringEntity;
 
 import com.arrow.acs.AcsErrorResponse;
 import com.arrow.acs.AcsLogicalException;
-import com.arrow.acs.AcsTerminatingException;
 import com.arrow.acs.AcsUtils;
 import com.arrow.acs.ApiHeaders;
 import com.arrow.acs.ApiRequestSigner;
@@ -404,11 +403,7 @@ public abstract class ApiAbstract extends Loggable {
             return (AcsClientException) t;
         } else {
             String error = String.format("Internal System Error: %s", t.getMessage());
-            if (t.getClass() == AcsTerminatingException.class) {
-                logWarn(method, t.getMessage());
-            } else {
-                logError(method, error, t);
-            }
+            logError(method, error, t);
             return new AcsClientException(error, new AcsErrorResponse().withStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR)
                     .withMessage(error).withExceptionClassName(t.getClass().getName()));
         }
