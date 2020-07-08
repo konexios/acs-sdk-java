@@ -14,50 +14,18 @@ jar.doFirst {
 }
 
 dependencies {
-    compile("org.apache.httpcomponents:httpclient:${httpclientVersion}")
+    api("org.apache.httpcomponents:httpclient:${httpclientVersion}")
     
-    compile("org.apache.logging.log4j:log4j-api:${log4jVersion}")
-    compile("org.apache.logging.log4j:log4j-core:${log4jVersion}")
-    compile("org.apache.logging.log4j:log4j-slf4j-impl:${log4jVersion}")           
-
-    compile("com.fasterxml.jackson.core:jackson-core:${jacksonVersion}")
-    compile("com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}")
-    compile("com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}")
-    compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}")
+    api("org.apache.logging.log4j:log4j-api:${log4jVersion}")
+    api("org.apache.logging.log4j:log4j-core:${log4jVersion}")
+    api("org.apache.logging.log4j:log4j-slf4j-impl:${log4jVersion}")           
     
-    compile("org.springframework.boot:spring-boot-loader:1.5.16.RELEASE")
-}
+    api("commons-logging:commons-logging:${commonsLoggingVersion}")
 
-
-def jarToCopy = copySpec {
-    from "build/libs/${jar.archiveName}"
-}
-
-task copyJar(dependsOn: jar) {
-    doLast {
-        copy {
-            with jarToCopy
-            into "../../acn-sdk-java/lib"
-        }
-        copy {
-            with jarToCopy
-            into "../../pegasus/pegasus-core/lib"
-        }
-        copy {
-            with jarToCopy
-            into "../../kronos/lib"
-        }
-        copy {
-            with jarToCopy
-            into "../../rhea/lib"
-        }
-        copy {
-            with jarToCopy
-            into "../../selene/lib"
-        }
-        copy {
-            with jarToCopy
-            into "../../apollo/lib"
-        }
-    }
+    api("com.fasterxml.jackson.core:jackson-core:${jacksonVersion}")
+    api("com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}")
+    api("com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}")
+    api("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}")
+    
+    api("org.springframework.boot:spring-boot-loader:${springBootLoaderVersion}")
 }
