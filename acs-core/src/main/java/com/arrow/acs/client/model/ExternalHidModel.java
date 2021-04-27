@@ -29,7 +29,7 @@ public class ExternalHidModel extends HidModel {
 	}
 
 	@Override
-	protected HidModel self() {
+	protected ExternalHidModel self() {
 		return this;
 	}
 }

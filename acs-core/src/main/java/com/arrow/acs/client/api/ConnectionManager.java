@@ -16,20 +16,34 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PreDestroy;
 
+import org.apache.http.HeaderElement;
+import org.apache.http.HeaderElementIterator;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.SocketConfig;
+import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.message.BasicHeaderElementIterator;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.protocol.HttpContext;
 
 import com.arrow.acs.AcsUtils;
 import com.arrow.acs.Loggable;
 
 public class ConnectionManager extends Loggable {
 
-	private static final int DEFAULT_MAX_TOTAL_CONNECTIONS = 2000;
-	private static final int DEFAULT_MAX_PER_ROUTE_CONNECTIONS = 2000;
+	private final static String ENV_CONNECTION_MANAGER_MAX_TOTAL_CONNECTIONS = "acs.connectionManager.maxTotalConnections";
+	private final static String ENV_CONNECTION_MANAGER_MAX_PER_ROUTE_CONNECTIONS = "acs.connectionManager.maxPerRouteConnections";
+	private final static String ENV_CONNECTION_MANAGER_SOCKET_TIMEOUT_SECS = "acs.connectionManager.socketTimeoutSecs";
+	private final static String ENV_CONNECTION_MANAGER_KEEP_ALIVE_SECS = "acs.connectionManager.keepAliveSecs";
+
+	private static final int DEFAULT_MAX_TOTAL_CONNECTIONS = 200;
+	private static final int DEFAULT_MAX_PER_ROUTE_CONNECTIONS = 200;
 	private static final int DEFAULT_VALIDATE_AFTER_INACTIVITY_MS = 5000;
-	private static final int DEFAULT_SOCKET_TIMEOUT_MS = 600000;
+	private static final int DEFAULT_SOCKET_TIMEOUT_SECS = 60;
+	private static final int DEFAULT_KEEP_ALIVE_SECS = 10;
 
 	private static final long DEFAULT_CLOSE_IDLE_CONNECTION_SECS = 30L;
 	private static final long DEFAULT_CONNECTION_MONITOR_DELAY_SECS = 30L;
@@ -46,22 +60,58 @@ public class ConnectionManager extends Loggable {
 	private PoolingHttpClientConnectionManager connectionManager;
 	private CloseableHttpClient sharedClient;
 
-	private int maxTotalConnections = DEFAULT_MAX_TOTAL_CONNECTIONS;
-	private int maxPerRouteConnections = DEFAULT_MAX_PER_ROUTE_CONNECTIONS;
+	private int maxTotalConnections;
+	private int maxPerRouteConnections;
+	private int socketTimeoutSecs;
+	private int keepAliveSecs;
 
 	private ScheduledFuture<?> connectionMonitor;
 
 	private ConnectionManager() {
 		String method = "ConnectionManager";
-		logInfo(method, "maxTotalConnections: %d", maxPerRouteConnections);
+
+		maxTotalConnections = AcsUtils.getSystemProperty(ENV_CONNECTION_MANAGER_MAX_TOTAL_CONNECTIONS,
+				DEFAULT_MAX_TOTAL_CONNECTIONS);
+		maxPerRouteConnections = AcsUtils.getSystemProperty(ENV_CONNECTION_MANAGER_MAX_PER_ROUTE_CONNECTIONS,
+				DEFAULT_MAX_PER_ROUTE_CONNECTIONS);
+		socketTimeoutSecs = AcsUtils.getSystemProperty(ENV_CONNECTION_MANAGER_SOCKET_TIMEOUT_SECS,
+				DEFAULT_SOCKET_TIMEOUT_SECS);
+		keepAliveSecs = AcsUtils.getSystemProperty(ENV_CONNECTION_MANAGER_KEEP_ALIVE_SECS, DEFAULT_KEEP_ALIVE_SECS);
+
 		connectionManager = new PoolingHttpClientConnectionManager();
 		connectionManager.setMaxTotal(maxTotalConnections);
 		connectionManager.setDefaultMaxPerRoute(maxPerRouteConnections);
 		connectionManager.setValidateAfterInactivity(DEFAULT_VALIDATE_AFTER_INACTIVITY_MS);
 		connectionManager.setDefaultSocketConfig(
-				SocketConfig.custom().setSoKeepAlive(true).setSoTimeout(DEFAULT_SOCKET_TIMEOUT_MS).build());
+				SocketConfig.custom().setSoKeepAlive(true).setSoTimeout(socketTimeoutSecs * 1000).build());
 
-		logInfo(method, "scheduling connection monitor thread ...");
+		ConnectionKeepAliveStrategy keepAliveStrategy = new ConnectionKeepAliveStrategy() {
+			@Override
+			public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
+				HeaderElementIterator it = new BasicHeaderElementIterator(
+						response.headerIterator(HTTP.CONN_KEEP_ALIVE));
+				while (it.hasNext()) {
+					HeaderElement he = it.nextElement();
+					String param = he.getName();
+					String value = he.getValue();
+					if (value != null && param.equalsIgnoreCase("timeout")) {
+						return Long.parseLong(value) * 1000;
+					}
+				}
+				return keepAliveSecs * 1000;
+			}
+		};
+
+		RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(socketTimeoutSecs * 1000)
+				.setConnectionRequestTimeout(socketTimeoutSecs * 1000).setSocketTimeout(socketTimeoutSecs * 1000)
+				.build();
+
+		// initialize shared client
+		logInfo(method, "creating shared client ...");
+		sharedClient = HttpClients.custom().setConnectionManager(connectionManager).setConnectionManagerShared(true)
+				.setKeepAliveStrategy(keepAliveStrategy).setDefaultRequestConfig(requestConfig).build();
+
+		logInfo(method, "starting connection monitor thread ...");
 		connectionMonitor = Executors.newSingleThreadScheduledExecutor().scheduleWithFixedDelay(() -> {
 			try {
 				connectionManager.closeExpiredConnections();
@@ -72,10 +122,6 @@ public class ConnectionManager extends Loggable {
 			} catch (Exception e) {
 			}
 		}, DEFAULT_CONNECTION_MONITOR_DELAY_SECS, DEFAULT_CONNECTION_MONITOR_INTERVAL_SECS, TimeUnit.SECONDS);
-
-		// initialize shared client
-		sharedClient = HttpClients.custom().setConnectionManager(connectionManager).setConnectionManagerShared(true)
-				.build();
 
 		logInfo(method, "ready");
 	}
