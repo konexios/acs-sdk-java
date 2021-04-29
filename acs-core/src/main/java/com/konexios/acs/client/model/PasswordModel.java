@@ -19,7 +19,7 @@ import java.io.Serializable;
 
 public class PasswordModel implements Serializable {
 	private static final long serialVersionUID = 3108123494888832412L;
-	
+
 	private String password;
 
 	public PasswordModel withPassword(String password) {

@@ -16,13 +16,13 @@
 package com.konexios.acs;
 
 public class AcsException extends Exception {
-    private static final long serialVersionUID = -3766369471827870800L;
+	private static final long serialVersionUID = -3766369471827870800L;
 
-    public AcsException(String message) {
-        super(message);
-    }
+	public AcsException(String message) {
+		super(message);
+	}
 
-    public AcsException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	public AcsException(String message, Throwable cause) {
+		super(message, cause);
+	}
 }

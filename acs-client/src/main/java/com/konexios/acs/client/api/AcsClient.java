@@ -13,10 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package com.arrow.acs.client.api;
+package com.konexios.acs.client.api;
 
 import com.konexios.acs.AcsUtils;
-import com.konexios.acs.client.api.ApiConfig;
 
 public final class AcsClient {
 	private ApiConfig apiConfig;

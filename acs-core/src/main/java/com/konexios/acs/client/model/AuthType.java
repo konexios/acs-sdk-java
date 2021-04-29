@@ -21,4 +21,3 @@ public enum AuthType {
 	SAML
 	// @formatter:on    
 }
-

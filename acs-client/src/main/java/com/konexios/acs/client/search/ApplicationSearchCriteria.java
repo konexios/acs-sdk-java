@@ -13,10 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package com.arrow.acs.client.search;
-
-import com.konexios.acs.client.search.PageSearchCriteria;
-import com.konexios.acs.client.search.SearchCriteria;
+package com.konexios.acs.client.search;
 
 public class ApplicationSearchCriteria extends SearchCriteria {
 	private static final String COMPANY_HID = "companyHid";

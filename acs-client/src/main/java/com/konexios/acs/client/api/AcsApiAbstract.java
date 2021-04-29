@@ -13,21 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package com.arrow.acs.client.search;
+package com.konexios.acs.client.api;
 
-import com.konexios.acs.client.search.SearchCriteria;
+abstract class AcsApiAbstract extends ApiAbstract {
+	protected static final String WEB_SERVICE_ROOT_URL = "/api/v1/pegasus";
 
-public class SubscriptionSearchCriteria extends SearchCriteria {
-	private static final String COMPANY_HID = "companyHid";
-	private static final String INCLUDE_DISABLED = "includeDisabled";
-
-	public SubscriptionSearchCriteria withCompanyHid(String companyHid) {
-		simpleCriteria.put(COMPANY_HID, companyHid);
-		return this;
-	}
-
-	public SubscriptionSearchCriteria withIncludeDisabled(boolean includeDisabled) {
-		simpleCriteria.put(INCLUDE_DISABLED, Boolean.toString(includeDisabled));
-		return this;
+	AcsApiAbstract(ApiConfig apiConfig) {
+		super();
+		setApiConfig(apiConfig);
 	}
 }

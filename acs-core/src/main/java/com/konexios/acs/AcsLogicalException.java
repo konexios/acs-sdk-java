@@ -16,13 +16,13 @@
 package com.konexios.acs;
 
 public class AcsLogicalException extends AcsRuntimeException {
-    private static final long serialVersionUID = 8444679053010167231L;
+	private static final long serialVersionUID = 8444679053010167231L;
 
-    public AcsLogicalException(String message) {
-        super(message);
-    }
+	public AcsLogicalException(String message) {
+		super(message);
+	}
 
-    public AcsLogicalException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	public AcsLogicalException(String message, Throwable cause) {
+		super(message, cause);
+	}
 }

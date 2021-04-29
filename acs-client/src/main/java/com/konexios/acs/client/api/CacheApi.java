@@ -13,14 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package com.arrow.acs.client.api;
+package com.konexios.acs.client.api;
 
 import java.net.URI;
 
 import org.apache.http.client.methods.HttpGet;
 
 import com.konexios.acs.JsonUtils;
-import com.konexios.acs.client.api.ApiConfig;
 import com.konexios.acs.client.model.AccessKeyModel;
 import com.konexios.acs.client.model.ApplicationModel;
 import com.konexios.acs.client.model.AuthModel;

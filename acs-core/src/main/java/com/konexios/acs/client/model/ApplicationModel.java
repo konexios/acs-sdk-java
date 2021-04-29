@@ -64,12 +64,12 @@ public class ApplicationModel extends DefinitionModelAbstract<ApplicationModel> 
 		setCode(code);
 		return this;
 	}
-	
+
 	public ApplicationModel withZoneHid(String zoneHid) {
 		setZoneHid(zoneHid);
 		return this;
 	}
-	
+
 	public ApplicationModel withZoneSystemName(String zoneSystemName) {
 		setZoneSystemName(zoneSystemName);
 		return this;

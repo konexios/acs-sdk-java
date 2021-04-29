@@ -149,12 +149,12 @@ public class GatewayEventModel implements Serializable {
 		if (signature == null) {
 			if (other.signature != null)
 				return false;
-		} else if (!signature.equals(other.signature)) 
+		} else if (!signature.equals(other.signature))
 			return false;
 		if (signatureVersion == null) {
 			if (other.signatureVersion != null)
 				return false;
-		} else if (!signatureVersion.equals(other.signatureVersion)) 
+		} else if (!signatureVersion.equals(other.signatureVersion))
 			return false;
 		return true;
 	}

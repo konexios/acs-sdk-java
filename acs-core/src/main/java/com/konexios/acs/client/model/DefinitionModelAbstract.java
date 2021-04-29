@@ -16,7 +16,7 @@
 package com.konexios.acs.client.model;
 
 public abstract class DefinitionModelAbstract<T extends DefinitionModelAbstract<T>>
-        extends AuditableDocumentModelAbstract<T> {
+		extends AuditableDocumentModelAbstract<T> {
 	private static final long serialVersionUID = 7485858149744674534L;
 
 	private String name;

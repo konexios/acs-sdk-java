@@ -13,15 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package com.arrow.acs.client.api;
+package com.konexios.acs.client.search;
 
-import com.konexios.acs.VersionAbstract;
-import com.konexios.acs.client.model.VersionModel;
+public class SubscriptionSearchCriteria extends SearchCriteria {
+	private static final String COMPANY_HID = "companyHid";
+	private static final String INCLUDE_DISABLED = "includeDisabled";
 
-public final class AcsClientVersion extends VersionAbstract {
-	private final static VersionModel VERSION = readManifest(AcsClientVersion.class);
+	public SubscriptionSearchCriteria withCompanyHid(String companyHid) {
+		simpleCriteria.put(COMPANY_HID, companyHid);
+		return this;
+	}
 
-	public static VersionModel get() {
-		return VERSION;
+	public SubscriptionSearchCriteria withIncludeDisabled(boolean includeDisabled) {
+		simpleCriteria.put(INCLUDE_DISABLED, Boolean.toString(includeDisabled));
+		return this;
 	}
 }

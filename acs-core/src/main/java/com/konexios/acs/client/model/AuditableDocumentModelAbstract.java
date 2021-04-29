@@ -16,7 +16,7 @@
 package com.konexios.acs.client.model;
 
 public abstract class AuditableDocumentModelAbstract<T extends AuditableDocumentModelAbstract<T>>
-        extends TsModelAbstract<T> {
+		extends TsModelAbstract<T> {
 	private static final long serialVersionUID = -1644864075961766068L;
 
 	private String lastModifiedDate;

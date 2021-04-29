@@ -16,9 +16,9 @@
 package com.konexios.acs;
 
 public class AcsTerminatingException extends AcsLogicalException {
-    private static final long serialVersionUID = -6053868676604047446L;
+	private static final long serialVersionUID = -6053868676604047446L;
 
-    public AcsTerminatingException() {
-        super("Application is terminating!");
-    }
+	public AcsTerminatingException() {
+		super("Application is terminating!");
+	}
 }

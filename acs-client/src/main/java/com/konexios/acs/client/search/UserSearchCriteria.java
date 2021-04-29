@@ -13,11 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package com.arrow.acs.client.search;
+package com.konexios.acs.client.search;
 
 import com.konexios.acs.client.model.UserStatus;
-import com.konexios.acs.client.search.PageSearchCriteria;
-import com.konexios.acs.client.search.SearchCriteria;
 
 public class UserSearchCriteria extends SearchCriteria {
 	private static final String LOGIN = "login";

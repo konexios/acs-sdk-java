@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package com.arrow.acs.client.api;
+package com.konexios.acs.client.api;
 
 import java.net.URI;
 
@@ -22,10 +22,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.utils.URIBuilder;
 
-import com.arrow.acs.client.search.UserSearchCriteria;
 import com.fasterxml.jackson.core.type.TypeReference;
+
 import com.konexios.acs.JsonUtils;
-import com.konexios.acs.client.api.ApiConfig;
 import com.konexios.acs.client.model.HidModel;
 import com.konexios.acs.client.model.PagingResultModel;
 import com.konexios.acs.client.model.PasswordModel;
@@ -33,6 +32,7 @@ import com.konexios.acs.client.model.StatusMessagesModel;
 import com.konexios.acs.client.model.UserAppAuthenticationModel;
 import com.konexios.acs.client.model.UserAuthenticationModel;
 import com.konexios.acs.client.model.UserModel;
+import com.konexios.acs.client.search.UserSearchCriteria;
 
 public final class UserApi extends AcsApiAbstract {
 	private static final String USERS_ROOT_URL = WEB_SERVICE_ROOT_URL + "/users";

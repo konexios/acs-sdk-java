@@ -13,16 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package com.arrow.acs.client.api;
+package com.konexios.acs.client.api;
 
-import com.konexios.acs.client.api.ApiAbstract;
-import com.konexios.acs.client.api.ApiConfig;
+import com.konexios.acs.VersionAbstract;
+import com.konexios.acs.client.model.VersionModel;
 
-abstract class AcsApiAbstract extends ApiAbstract {
-	protected static final String WEB_SERVICE_ROOT_URL = "/api/v1/pegasus";
+public final class AcsClientVersion extends VersionAbstract {
+	private final static VersionModel VERSION = readManifest(AcsClientVersion.class);
 
-	AcsApiAbstract(ApiConfig apiConfig) {
-		super();
-		setApiConfig(apiConfig);
+	public static VersionModel get() {
+		return VERSION;
 	}
 }

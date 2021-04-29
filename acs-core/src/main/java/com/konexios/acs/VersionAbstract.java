@@ -26,7 +26,7 @@ public abstract class VersionAbstract {
 
 	protected static VersionModel readManifest(Class<?> clazz) {
 		VersionModel model = new VersionModel().withMajor(0).withMinor(0).withBuild(0).withName("Unknown")
-		        .withDescription("Unknown");
+				.withDescription("Unknown");
 		try {
 			Manifest manifest = ManifestUtils.readManifest(clazz);
 			Attributes attrs = manifest.getMainAttributes();

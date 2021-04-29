@@ -15,8 +15,6 @@
  ******************************************************************************/
 package com.konexios.acs.client.search;
 
-import com.konexios.acs.client.search.SearchCriteria;
-
 public class PageSearchCriteria extends SearchCriteria {
 	private static final String PAGE = "_page";
 	private static final String SIZE = "_size";
