@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2021 Konexios, Inc.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package com.arrow.acs.client.api;
 
 import java.net.URI;
@@ -6,10 +21,11 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 
-import com.arrow.acs.JsonUtils;
-import com.arrow.acs.client.model.HidModel;
-import com.arrow.acs.client.model.RoleModel;
-import com.arrow.acs.client.model.SubscriptionModel;
+import com.konexios.acs.JsonUtils;
+import com.konexios.acs.client.api.ApiConfig;
+import com.konexios.acs.client.model.HidModel;
+import com.konexios.acs.client.model.RoleModel;
+import com.konexios.acs.client.model.SubscriptionModel;
 
 public final class RoleApi extends AcsApiAbstract {
 	private static final String ROLES_ROOT_URL = WEB_SERVICE_ROOT_URL + "/roles";

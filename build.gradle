@@ -1,8 +1,8 @@
 buildscript {
     ext {
-        log4jVersion = '2.11.2'
+        log4jVersion = '2.14.1'
         commonsLoggingVersion = '1.2'
-        jacksonVersion = '2.11.1'
+        jacksonVersion = '2.12.3'
         httpclientVersion = '4.5.13'
         springBootLoaderVersion = '2.3.1.RELEASE'        
     }
@@ -57,7 +57,7 @@ subprojects {
     }
 
     group = 'com.konexios'
-    version = '2021.4.0'
+    version = '2021.6.0'
     
     compileJava.dependsOn(processResources)
 
