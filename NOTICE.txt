@@ -1,2 +1,1 @@
-Copyright 2018 Arrow Electronics, Inc. or its affiliates. All Rights Reserved.
-Product:	Arrow Cloud Services (ACS)
+Copyright 2021 Konexios, Inc. All Rights Reserved.
