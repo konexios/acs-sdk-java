@@ -87,8 +87,8 @@ public class ApiRequestSigner extends Loggable {
 		String method = "signV0";
 		validateRequired();
 		StringBuilder builder = buildCanonicalRequest();
-		builder.append(String.format("%s=%s\n", ApiHeaders.X_ARROW_APIKEY, apiKey));
-		builder.append(String.format("%s=%s", ApiHeaders.X_ARROW_DATE, timestamp));
+		builder.append(String.format("%s=%s\n", ApiHeaders.X_KONEXIOS_APIKEY, apiKey));
+		builder.append(String.format("%s=%s", ApiHeaders.X_KONEXIOS_DATE, timestamp));
 
 		String stringToSign = builder.toString();
 		logDebug(method, "stringToSign: %s\n", stringToSign);
@@ -110,11 +110,11 @@ public class ApiRequestSigner extends Loggable {
 		stringToSign.append(AcsUtils.sha256Hex(canonicalRequest)).append('\n');
 		stringToSign.append(apiKey).append('\n');
 		stringToSign.append(timestamp).append('\n');
-		stringToSign.append(ApiHeaders.X_ARROW_VERSION_1);
+		stringToSign.append(ApiHeaders.X_KONEXIOS_VERSION_1);
 		logDebug(method, "stringToSign:\n%s", stringToSign);
 
 		return AcsUtils.hmacSha256Hex(
-				AcsUtils.hmacSha256Hex(ApiHeaders.X_ARROW_VERSION_1,
+				AcsUtils.hmacSha256Hex(ApiHeaders.X_KONEXIOS_VERSION_1,
 						AcsUtils.hmacSha256Hex(timestamp, AcsUtils.hmacSha256Hex(apiKey, secretKey))),
 				stringToSign.toString());
 	}
@@ -134,11 +134,11 @@ public class ApiRequestSigner extends Loggable {
 		stringToSign.append(AcsUtils.sha256Hex(canonicalRequest)).append('\n');
 		stringToSign.append(apiKey).append('\n');
 		stringToSign.append(timestamp).append('\n');
-		stringToSign.append(ApiHeaders.X_ARROW_VERSION_2);
+		stringToSign.append(ApiHeaders.X_KONEXIOS_VERSION_2);
 		logDebug(method, "stringToSign:\n%s", stringToSign);
 
 		return AcsUtils.hmacSha256Hex(
-				AcsUtils.hmacSha256Hex(ApiHeaders.X_ARROW_VERSION_2,
+				AcsUtils.hmacSha256Hex(ApiHeaders.X_KONEXIOS_VERSION_2,
 						AcsUtils.hmacSha256Hex(timestamp, AcsUtils.hmacSha256Hex(secretKey, apiKey))),
 				stringToSign.toString());
 	}
@@ -158,12 +158,12 @@ public class ApiRequestSigner extends Loggable {
 		stringToSign.append(AcsUtils.sha256Hex(canonicalRequest)).append('\n');
 		stringToSign.append(apiKey).append('\n');
 		stringToSign.append(timestamp).append('\n');
-		stringToSign.append(ApiHeaders.X_ARROW_VERSION_3);
+		stringToSign.append(ApiHeaders.X_KONEXIOS_VERSION_3);
 		logDebug(method, "stringToSign:\n%s", stringToSign);
 
 		return AcsUtils.hmacSha256Hex(
 				AcsUtils.hmacSha256Hex(AcsUtils.hmacSha256Hex(AcsUtils.hmacSha256Hex(secretKey, apiKey), timestamp),
-						ApiHeaders.X_ARROW_VERSION_3),
+						ApiHeaders.X_KONEXIOS_VERSION_3),
 				stringToSign.toString());
 	}
 

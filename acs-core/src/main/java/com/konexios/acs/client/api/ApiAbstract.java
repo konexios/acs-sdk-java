@@ -278,7 +278,7 @@ public abstract class ApiAbstract extends Loggable {
 
 	private HttpRequestBase sign(HttpRequestBase request, SearchCriteria criteria) {
 		String method = "sign";
-		Header[] existing = request.getHeaders(ApiHeaders.X_ARROW_SIGNATURE);
+		Header[] existing = request.getHeaders(ApiHeaders.X_KONEXIOS_SIGNATURE);
 		if (existing == null || existing.length == 0) {
 			Instant timestamp = Instant.now();
 			ApiRequestSigner signer = getSigner(request, timestamp);
@@ -311,10 +311,10 @@ public abstract class ApiAbstract extends Loggable {
 		AcsUtils.notEmpty(apiConfig.getApiKey(), "apiKey is empty");
 		msg.setHeader(HttpHeaders.CONTENT_TYPE, MIME_APPLICATION_JSON);
 		msg.setHeader(HttpHeaders.ACCEPT, MIME_APPLICATION_JSON);
-		msg.setHeader(ApiHeaders.X_ARROW_APIKEY, apiConfig.getApiKey());
-		msg.setHeader(ApiHeaders.X_ARROW_DATE, timestamp.toString());
-		msg.setHeader(ApiHeaders.X_ARROW_VERSION, ApiHeaders.X_ARROW_VERSION_1);
-		msg.setHeader(ApiHeaders.X_ARROW_SIGNATURE, signature);
+		msg.setHeader(ApiHeaders.X_KONEXIOS_APIKEY, apiConfig.getApiKey());
+		msg.setHeader(ApiHeaders.X_KONEXIOS_DATE, timestamp.toString());
+		msg.setHeader(ApiHeaders.X_KONEXIOS_VERSION, ApiHeaders.X_KONEXIOS_VERSION_1);
+		msg.setHeader(ApiHeaders.X_KONEXIOS_SIGNATURE, signature);
 	}
 
 	private String executeCloudRequest(HttpRequestBase request) throws Exception {
@@ -350,14 +350,14 @@ public abstract class ApiAbstract extends Loggable {
 		String requestId = AcsUtils.randomString(32);
 
 		CloudRequestModel requestModel = new CloudRequestModel().withEncrypted(false).withRequestId(requestId)
-				.withEventName(eventName).withSignatureVersion(ApiHeaders.X_ARROW_VERSION_1);
+				.withEventName(eventName).withSignatureVersion(ApiHeaders.X_KONEXIOS_VERSION_1);
 
 		CloudRequestParameters parameters = new CloudRequestParameters()
 				.withMethod(CloudRequestMethodName.valueOf(request.getMethod())).withUri(request.getURI().getPath())
-				.withApiKey(request.getFirstHeader(ApiHeaders.X_ARROW_APIKEY).getValue())
-				.withTimestamp(request.getFirstHeader(ApiHeaders.X_ARROW_DATE).getValue())
-				.withApiRequestSignature(request.getFirstHeader(ApiHeaders.X_ARROW_SIGNATURE).getValue())
-				.withApiRequestSignatureVersion(request.getFirstHeader(ApiHeaders.X_ARROW_VERSION).getValue());
+				.withApiKey(request.getFirstHeader(ApiHeaders.X_KONEXIOS_APIKEY).getValue())
+				.withTimestamp(request.getFirstHeader(ApiHeaders.X_KONEXIOS_DATE).getValue())
+				.withApiRequestSignature(request.getFirstHeader(ApiHeaders.X_KONEXIOS_SIGNATURE).getValue())
+				.withApiRequestSignatureVersion(request.getFirstHeader(ApiHeaders.X_KONEXIOS_VERSION).getValue());
 
 		if (HttpEntityEnclosingRequestBase.class.isAssignableFrom(request.getClass())) {
 			HttpEntity entity = ((HttpEntityEnclosingRequestBase) request).getEntity();
