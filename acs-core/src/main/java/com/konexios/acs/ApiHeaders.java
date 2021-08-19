@@ -31,8 +31,5 @@ public interface ApiHeaders {
 	String X_ARROW_APIKEY = "x-arrow-apikey";
 	String X_ARROW_DATE = "x-arrow-date";
 	String X_ARROW_SIGNATURE = "x-arrow-signature";
-	String X_ARROW_VERSION_1 = "1";
-	String X_ARROW_VERSION_2 = "2";
-	String X_ARROW_VERSION_3 = "3";
 	String X_AUTH_TOKEN = "x-auth-token";
 }
