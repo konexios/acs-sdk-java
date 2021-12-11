@@ -16,15 +16,20 @@
 package com.konexios.acs;
 
 public interface ApiHeaders {
+
+	String X_KONEXIOS_VERSION = "x-konexios-version";
+	String X_KONEXIOS_APIKEY = "x-konexios-apikey";
+	String X_KONEXIOS_DATE = "x-konexios-date";
+	String X_KONEXIOS_SIGNATURE = "x-konexios-signature";
+
+	String X_KONEXIOS_VERSION_1 = "1";
+	String X_KONEXIOS_VERSION_2 = "2";
+	String X_KONEXIOS_VERSION_3 = "3";
+
+	// backward compatible
 	String X_ARROW_VERSION = "x-arrow-version";
 	String X_ARROW_APIKEY = "x-arrow-apikey";
 	String X_ARROW_DATE = "x-arrow-date";
 	String X_ARROW_SIGNATURE = "x-arrow-signature";
-
-	String X_ARROW_VERSION_1 = "1";
-	String X_ARROW_VERSION_2 = "2";
-	String X_ARROW_VERSION_3 = "3";
-
-	// backward compatible
 	String X_AUTH_TOKEN = "x-auth-token";
 }
