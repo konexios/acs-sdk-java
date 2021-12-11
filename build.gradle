@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        log4jVersion = '2.14.1'
+        log4jVersion = '2.15.0'
         commonsLoggingVersion = '1.2'
         jacksonVersion = '2.12.3'
         httpclientVersion = '4.5.13'
@@ -57,7 +57,7 @@ subprojects {
     }
 
     group = 'com.konexios'
-    version = '2021.9.0'
+    version = '2021.12.0'
     
     compileJava.dependsOn(processResources)
 
@@ -75,7 +75,7 @@ subprojects {
     }
         
     task wrapper(type: Wrapper) {
-        gradleVersion = '6.9'        
+        gradleVersion = '5.6.4'
     }
     
     publishing {
